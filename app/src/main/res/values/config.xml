@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="google_services_web_client_id" tools:ignore="TypographyDashes">341238982922-577kjgu393fkng7o05dr9u2rqjusl85a.apps.googleusercontent.com</string>
-    <string name="app_web_client_id" tools:ignore="TypographyDashes">341238982922-7gt9gbaor8gk8jvj08o9lav840gc4df9.apps.googleusercontent.com</string>
-</resources>
