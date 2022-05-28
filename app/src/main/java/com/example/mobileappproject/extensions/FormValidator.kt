@@ -1,6 +1,5 @@
 package com.example.mobileappproject.extensions
 
-import android.content.Context
 import android.util.Patterns
 import android.widget.EditText
 
