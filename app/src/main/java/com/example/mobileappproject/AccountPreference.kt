@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 
 object AccountPreference {
-    const val EMAIL= "email"
-    const val USERNAME="username"
+    private const val EMAIL= "email"
+    private const val USERNAME="username"
 
     private  fun getSharedPreference(ctx: Context): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
