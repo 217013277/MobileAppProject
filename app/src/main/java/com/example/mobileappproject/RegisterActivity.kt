@@ -1,16 +1,18 @@
 package com.example.mobileappproject
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mobileappproject.extensions.checkEmail
 import com.example.mobileappproject.extensions.checkPassword
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -44,17 +46,25 @@ class RegisterActivity : AppCompatActivity() {
         val isPasswordChecked = checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
-            firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
-                if(task.isSuccessful){
+            if (canUpgradeAnonymous(firebaseAuth)) {
+                val credential = EmailAuthProvider.getCredential(email, password)
+                firebaseAuth.currentUser?.linkWithCredential(credential)
+            } else {
+                firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
+                    if(task.isSuccessful){
 //                firebaseAuth.currentUser
-                    finish()
-                    goToMain()
+                        finish()
+                        goToMain()
+                    }
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
+                    Log.d("login exception", exception.toString())
                 }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
-                Log.d("login exception", exception.toString())
             }
         }
+    }
+    private fun canUpgradeAnonymous(firebaseAuth: FirebaseAuth): Boolean {
+        return firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isAnonymous == true
     }
 
     private fun goToMain(){

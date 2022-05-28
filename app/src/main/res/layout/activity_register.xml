@@ -10,7 +10,6 @@
         android:id="@+id/editTextEmailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -20,7 +19,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="emailAddress" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -35,7 +35,8 @@
         app:layout_constraintBottom_toTopOf="@+id/registerBtn"
         app:layout_constraintEnd_toEndOf="@+id/editTextEmailAddress"
         app:layout_constraintStart_toStartOf="@+id/editTextEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmailAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmailAddress"
+        android:autofillHints="password" />
 
     <Button
         android:id="@+id/registerBtn"
@@ -44,19 +45,9 @@
         android:text="REGISTER"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/googleSignInBtn"
-        app:layout_constraintStart_toStartOf="@+id/googleSignInBtn"
+        app:layout_constraintEnd_toEndOf="@+id/editTextEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/editTextEmailAddress"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleSignInBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerBtn"
-        tools:ignore="MissingClass" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -68,14 +59,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/googleSignInBtn">
+        app:layout_constraintTop_toBottomOf="@+id/registerBtn">
 
         <TextView
             android:id="@+id/textViewAskAccountTrue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.75"
-            android:text="Do you have an account?"
+            android:text="Already have an account?"
             android:textColor="@color/black"
             android:textSize="18sp" />
 

@@ -1,15 +1,18 @@
 package com.example.mobileappproject
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import com.example.mobileappproject.extensions.Biometric
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -19,11 +22,16 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val Req_Code:Int=123
     private lateinit var firebaseAuth: FirebaseAuth
+
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,14 +64,58 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this,"Logging In",Toast.LENGTH_SHORT).show()
             signInGoogle()
         }
+
+        //Biometric
+        executor = ContextCompat.getMainExecutor(this)
+
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+
+                override fun onAuthenticationError(errorCode: Int,
+                                                   errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(applicationContext,
+                        "Authentication error: $errString", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(applicationContext,
+                        "Authentication succeeded!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+
+        val biometricLoginButton =
+            findViewById<ImageButton>(R.id.biometricBtn)
+        biometricLoginButton.setOnClickListener {
+            biometricPrompt.authenticate(promptInfo)
+        }
     }
 
     // Email and password login
-    fun login() {
+    private fun login() {
         val editTextEmailAddress = findViewById<EditText>(R.id.editTextEmailAddress)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val email = editTextEmailAddress.text.toString()
         val password = editTextPassword.text.toString()
+
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
@@ -78,17 +130,16 @@ class LoginActivity : AppCompatActivity() {
 
     // Google login
     private fun signInGoogle(){
-
-        val signInIntent: Intent =mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent,Req_Code)
+        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+        resultLauncher.launch(signInIntent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==Req_Code){
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleResult(task)
-//            firebaseAuthWithGoogle(account!!)
         }
     }
 
@@ -124,6 +175,16 @@ class LoginActivity : AppCompatActivity() {
     private fun goToRegister(){
         val intent= Intent(this,RegisterActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val biometricBtn = findViewById<ImageButton>(R.id.biometricBtn)
+        val email = AccountPreference.getEmail(this)
+        val username = AccountPreference.getUsername(this)
+        if (email.toString().isEmpty() && username.toString().isEmpty()) {
+            biometricBtn.visibility = View.GONE
+        }
     }
 
     // if you do not add this check, then you would have to login everytime you start your application on your phone.
