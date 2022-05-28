@@ -2,13 +2,13 @@ package com.example.mobileappproject
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 object AccountPreference {
     const val EMAIL= "email"
     const val USERNAME="username"
 
-    private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
+    private  fun getSharedPreference(ctx: Context): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
     }
 

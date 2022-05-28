@@ -48,4 +48,5 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.0.2')
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
 }
