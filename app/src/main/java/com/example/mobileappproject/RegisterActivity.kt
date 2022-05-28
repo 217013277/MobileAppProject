@@ -42,8 +42,8 @@ class RegisterActivity : AppCompatActivity() {
         val email=editTextEmailAddress.text.toString()
         val password=editTextPassword.text.toString()
 
-        val isEmailChecked = checkEmail(this, editTextEmailAddress)
-        val isPasswordChecked = checkPassword(this, editTextPassword)
+        val isEmailChecked = checkEmail(editTextEmailAddress)
+        val isPasswordChecked = checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
             firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->

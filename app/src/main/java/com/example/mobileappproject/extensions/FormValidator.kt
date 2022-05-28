@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Patterns
 import android.widget.EditText
 
-fun checkEmail(context: Context, ediTextEmail: EditText): Boolean {
+fun checkEmail(ediTextEmail: EditText): Boolean {
     val email = ediTextEmail.text.toString()
 
     if (email.isEmpty()) {
@@ -18,7 +18,7 @@ fun checkEmail(context: Context, ediTextEmail: EditText): Boolean {
     return true
 }
 
-fun checkPassword(context: Context, editTextPassword: EditText): Boolean {
+fun checkPassword(editTextPassword: EditText): Boolean {
     val password = editTextPassword.text.toString()
 
     if (password.isEmpty()) {
