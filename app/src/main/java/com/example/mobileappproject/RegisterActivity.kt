@@ -1,15 +1,17 @@
 package com.example.mobileappproject
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.example.mobileappproject.extensions.checkEmail
+import com.example.mobileappproject.extensions.checkPassword
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
@@ -40,15 +42,20 @@ class RegisterActivity : AppCompatActivity() {
         val email=editTextEmailAddress.text.toString()
         val password=editTextPassword.text.toString()
 
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
-            if(task.isSuccessful){
+        var isEmailChecked = checkEmail(this, editTextEmailAddress)
+        var isPasswordChecked = checkPassword(this, editTextPassword)
+
+        if (isEmailChecked && isPasswordChecked) {
+            firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
+                if(task.isSuccessful){
 //                firebaseAuth.currentUser
-                finish()
-                goToMain()
+                    finish()
+                    goToMain()
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
+                Log.d("login exception", exception.toString())
             }
-        }.addOnFailureListener { exception ->
-            Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
-            Log.d("login exception", exception.toString())
         }
     }
 
@@ -69,6 +76,6 @@ class RegisterActivity : AppCompatActivity() {
 //            goToLogin()
 //        }
 //    }
-
 }
+
 
