@@ -2,18 +2,15 @@ package com.example.mobileappproject
 
 import android.app.Activity
 import android.content.Intent
+import androidx.biometric.BiometricPrompt
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import com.example.mobileappproject.extensions.checkEmail
-import com.example.mobileappproject.extensions.checkPassword
-import com.example.mobileappproject.extensions.goToMainActivity
-import com.example.mobileappproject.extensions.goToRegisterActivity
+import com.example.mobileappproject.extensions.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -101,6 +98,13 @@ class LoginActivity : AppCompatActivity() {
 
         biometricLoginButton.setOnClickListener {
             biometricPrompt.authenticate(promptInfo)
+
+//            val isBiometricAuthSucceed = biometricAuth(this,this)
+//            if (isBiometricAuthSucceed) {
+//                Log.d("test biometric", "SUCCESS")
+//            } else {
+//                Log.d("test biometric", "FAIL")
+//            }
         }
     }
 
