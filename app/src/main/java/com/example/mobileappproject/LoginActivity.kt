@@ -10,6 +10,8 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.example.mobileappproject.extensions.goToMainActivity
+import com.example.mobileappproject.extensions.goToRegisterActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -164,13 +166,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMain(){
-        val intent= Intent(this,MainActivity::class.java)
-        startActivity(intent)
+//        val intent= Intent(this,MainActivity::class.java)
+//        startActivity(intent)
+        goToMainActivity(this)
     }
 
     private fun goToRegister(){
-        val intent= Intent(this,RegisterActivity::class.java)
-        startActivity(intent)
+//        val intent= Intent(this,RegisterActivity::class.java)
+//        startActivity(intent)
+        goToRegisterActivity(this)
     }
 
     override fun onResume() {
@@ -182,6 +186,7 @@ class LoginActivity : AppCompatActivity() {
             biometricBtn.visibility = View.GONE
         }
     }
+
 
     // if you do not add this check, then you would have to login everytime you start your application on your phone.
 //    override fun onStart() {

@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mobileappproject.extensions.checkEmail
 import com.example.mobileappproject.extensions.checkPassword
+import com.example.mobileappproject.extensions.goToLoginActivity
+import com.example.mobileappproject.extensions.goToMainActivity
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 
@@ -68,13 +70,15 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun goToMain(){
-        val intent= Intent(this,MainActivity::class.java)
-        startActivity(intent)
+//        val intent= Intent(this,MainActivity::class.java)
+//        startActivity(intent)
+        goToMainActivity(this)
     }
 
     private fun goToLogin(){
-        val intent= Intent(this,LoginActivity::class.java)
-        startActivity(intent)
+//        val intent= Intent(this,LoginActivity::class.java)
+//        startActivity(intent)
+        goToLoginActivity(this)
     }
 
     // if you do not add this check, then you would have to login everytime you start your application on your phone.

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.mobileappproject.extensions.goToLoginActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -54,7 +55,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToLogin(){
-        val intent= Intent(this,LoginActivity::class.java)
-        startActivity(intent)
+//        val intent= Intent(this,LoginActivity::class.java)
+//        startActivity(intent)
+        goToLoginActivity(this)
     }
 }
