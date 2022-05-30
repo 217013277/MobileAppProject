@@ -1,6 +1,5 @@
 package com.example.mobileappproject
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -48,6 +47,7 @@ class RegisterActivity : AppCompatActivity() {
         val isPasswordChecked = checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
+            Log.d("current_user", firebaseAuth.currentUser.toString())
             if (canUpgradeAnonymous(firebaseAuth)) {
                 val credential = EmailAuthProvider.getCredential(email, password)
                 firebaseAuth.currentUser?.linkWithCredential(credential)

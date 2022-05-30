@@ -10,6 +10,8 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.example.mobileappproject.extensions.checkEmail
+import com.example.mobileappproject.extensions.checkPassword
 import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.extensions.goToRegisterActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -25,7 +27,6 @@ import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
-    private val Req_Code:Int=123
     private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var executor: Executor
@@ -116,14 +117,19 @@ class LoginActivity : AppCompatActivity() {
         val email = editTextEmailAddress.text.toString()
         val password = editTextPassword.text.toString()
 
-        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
-            if(task.isSuccessful){
-                AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
-                goToMain()
-                finish()
+        val isEmailChecked = checkEmail(editTextEmailAddress)
+        val isPasswordChecked = checkPassword(editTextPassword)
+
+        if (isEmailChecked && isPasswordChecked) {
+            firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
+                if(task.isSuccessful){
+                    AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
+                    goToMain()
+                    finish()
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
             }
-        }.addOnFailureListener { exception ->
-            Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
         }
     }
 
