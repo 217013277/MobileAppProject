@@ -8,11 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import com.example.mobileappproject.extensions.Biometric
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -85,6 +82,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext,
                         "Authentication succeeded!", Toast.LENGTH_SHORT)
                         .show()
+                    goToMain()
                 }
 
                 override fun onAuthenticationFailed() {
@@ -119,7 +117,6 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
-                AccountPreference.setUsername(this,firebaseAuth.currentUser?.displayName.toString())
                 goToMain()
                 finish()
             }
@@ -134,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
         resultLauncher.launch(signInIntent)
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
             val data: Intent? = result.data
@@ -160,7 +157,6 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 AccountPreference.setEmail(this,account.email.toString())
-                AccountPreference.setUsername(this,account.displayName.toString())
                 finish()
                 goToMain()
             }
