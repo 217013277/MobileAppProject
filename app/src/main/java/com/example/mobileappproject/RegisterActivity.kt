@@ -19,7 +19,7 @@ import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var  firebaseAuth: FirebaseAuth
+//    private lateinit var  firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class RegisterActivity : AppCompatActivity() {
             goToLogin()
         }
 
-        firebaseAuth = FirebaseAuth.getInstance()
+//        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     private fun register(){
@@ -49,12 +49,12 @@ class RegisterActivity : AppCompatActivity() {
         val isPasswordChecked = checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
-            Log.d("current_user", firebaseAuth.currentUser.toString())
-            if (canUpgradeAnonymous(firebaseAuth)) {
+            Log.d("current_user", Firebase.auth.currentUser.toString())
+            if (canUpgradeAnonymous(Firebase.auth)) {
                 val credential = EmailAuthProvider.getCredential(email, password)
-                firebaseAuth.currentUser?.linkWithCredential(credential)
+                Firebase.auth.currentUser?.linkWithCredential(credential)
             } else {
-                firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
+                Firebase.auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                     if(task.isSuccessful){
 //                firebaseAuth.currentUser
                         finish()

@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             .build()
         // getting the value of gso inside the GoogleSigninClient
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
-        firebaseAuth = FirebaseAuth.getInstance()
+//        firebaseAuth = FirebaseAuth.getInstance()
 
         googleSignIn.setOnClickListener{
             Toast.makeText(this,"Logging In",Toast.LENGTH_SHORT).show()
@@ -115,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
         val isPasswordChecked = checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
-            firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
+            Firebase.auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
 //                    AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
                     goToMain()
@@ -156,7 +156,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUI(account: GoogleSignInAccount){
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
+        Firebase.auth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 finish()
                 goToMain()
