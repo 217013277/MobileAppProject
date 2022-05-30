@@ -4,16 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.example.mobileappproject.extensions.goToLoginActivity
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var  gso: GoogleSignInOptions
-    private lateinit var  gsc: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,41 +16,32 @@ class MainActivity : AppCompatActivity() {
 
         val email = findViewById<TextView>(R.id.email)
         val logoutBtn = findViewById<Button>(R.id.logoutBtn)
-        val email2 = findViewById<TextView>(R.id.email2)
+
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            email.text = user.displayName
+        } else {
+            email.text = getString(R.string.no_user_found)
+        }
 
         logoutBtn.setOnClickListener{
-            logout()
-        }
-
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-        gsc = GoogleSignIn.getClient(this,gso)
-
-        val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-        if(googleAccount != null) {
-            val personEmail = googleAccount.email
-
-            email.text = personEmail
-        }
-
-        email2.text = AccountPreference.getEmail(this).toString()
-    }
-
-    private fun logout() {
-        gsc.signOut().addOnCompleteListener(this) { task ->
-            if(task.isSuccessful){
-                goToLogin()
-                finish()
-            }
-        }.addOnFailureListener { exception ->
-            Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
+            Firebase.auth.signOut()
+            goToLogin()
         }
     }
+
+//    private fun logout() {
+//        gsc.signOut().addOnCompleteListener(this) { task ->
+//            if(task.isSuccessful){
+//                goToLogin()
+//                finish()
+//            }
+//        }.addOnFailureListener { exception ->
+//            Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
+//        }
+//    }
 
     private fun goToLogin(){
-//        val intent= Intent(this,LoginActivity::class.java)
-//        startActivity(intent)
         goToLoginActivity(this)
     }
 }

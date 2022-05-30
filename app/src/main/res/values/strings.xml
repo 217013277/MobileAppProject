@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">MobileAppProject</string>
+    <string name="logout">Logout</string>
+    <string name="login">Login</string>
+    <string name="register">REGISTER</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="do_not_have_an_account">Do not have an account?</string>
+    <string name="want_to_sign_in_with_another_account">Want to sign in with another account?</string>
+    <string name="no_user_found">No user found</string>
 </resources>
 

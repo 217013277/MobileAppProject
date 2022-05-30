@@ -23,6 +23,8 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
@@ -38,16 +40,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val loginBtn = findViewById<Button>(R.id.loginBtn)
+        val biometricLoginButton = findViewById<ImageButton>(R.id.biometricBtn)
+        val googleSignIn = findViewById<SignInButton>(R.id.googleSignInBtn)
+
         loginBtn.setOnClickListener{
-            login()
-        }
-
-//        findViewById<Button>(R.id.loginBtn).setOnClickListener{ login() }
-
-        val goToRegisterBtn = findViewById<TextView>(R.id.textViewToRegister)
-        goToRegisterBtn.setOnClickListener{
-            Toast.makeText(this,"go to Register Page",Toast.LENGTH_SHORT).show()
-            goToRegister()
+            emailSignIn()
         }
 
         // Configure Google Sign In inside onCreate mentod
@@ -59,7 +56,6 @@ class LoginActivity : AppCompatActivity() {
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
         firebaseAuth = FirebaseAuth.getInstance()
 
-        val googleSignIn = findViewById<SignInButton>(R.id.googleSignInBtn)
         googleSignIn.setOnClickListener{
             Toast.makeText(this,"Logging In",Toast.LENGTH_SHORT).show()
             signInGoogle()
@@ -103,15 +99,13 @@ class LoginActivity : AppCompatActivity() {
             .setNegativeButtonText("Use account password")
             .build()
 
-        val biometricLoginButton =
-            findViewById<ImageButton>(R.id.biometricBtn)
         biometricLoginButton.setOnClickListener {
             biometricPrompt.authenticate(promptInfo)
         }
     }
 
     // Email and password login
-    private fun login() {
+    private fun emailSignIn() {
         val editTextEmailAddress = findViewById<EditText>(R.id.editTextEmailAddress)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val email = editTextEmailAddress.text.toString()
@@ -123,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
         if (isEmailChecked && isPasswordChecked) {
             firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
+//                    AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
                     goToMain()
                     finish()
                 }
@@ -164,7 +158,6 @@ class LoginActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
-                AccountPreference.setEmail(this,account.email.toString())
                 finish()
                 goToMain()
             }
@@ -186,13 +179,27 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val biometricBtn = findViewById<ImageButton>(R.id.biometricBtn)
-        val email = AccountPreference.getEmail(this)
-        val username = AccountPreference.getUsername(this)
-        if (email.toString().isEmpty() && username.toString().isEmpty()) {
+        val tvAskIfAccount = findViewById<TextView>(R.id.tvAskIfAccountExisted)
+        val goToRegisterBtn = findViewById<TextView>(R.id.tvToRegister)
+
+        val user = Firebase.auth.currentUser
+
+        if (user == null) {
             biometricBtn.visibility = View.GONE
+
+            tvAskIfAccount.text = getString(R.string.do_not_have_an_account)
+            goToRegisterBtn.setOnClickListener{
+                goToRegister()
+            }
+        } else {
+            tvAskIfAccount.text = getString(R.string.want_to_sign_in_with_another_account)
+            goToRegisterBtn.text = getString(R.string.logout)
+            goToRegisterBtn.setOnClickListener{
+                Firebase.auth.signOut()
+                goToRegister()
+            }
         }
     }
-
 
     // if you do not add this check, then you would have to login everytime you start your application on your phone.
 //    override fun onStart() {

@@ -13,6 +13,8 @@ import com.example.mobileappproject.extensions.goToLoginActivity
 import com.example.mobileappproject.extensions.goToMainActivity
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -28,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
             register()
         }
 
-        val goToLoginBtn = findViewById<TextView>(R.id.textViewToLogin)
+        val goToLoginBtn = findViewById<TextView>(R.id.tvToLogin)
         goToLoginBtn.setOnClickListener{
             Toast.makeText(this,"go to Register Page",Toast.LENGTH_SHORT).show()
             goToLogin()
@@ -70,25 +72,21 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun goToMain(){
-//        val intent= Intent(this,MainActivity::class.java)
-//        startActivity(intent)
         goToMainActivity(this)
     }
 
     private fun goToLogin(){
-//        val intent= Intent(this,LoginActivity::class.java)
-//        startActivity(intent)
         goToLoginActivity(this)
     }
 
     // if you do not add this check, then you would have to login everytime you start your application on your phone.
-//    override fun onStart() {
-//        super.onStart()
-//        if(GoogleSignIn.getLastSignedInAccount(this)!=null){
-//            goToLogin()
-//        }
-//    }
-
+    override fun onStart() {
+        super.onStart()
+        val user = Firebase.auth.currentUser
+        if(user!=null){
+            goToLogin()
+        }
+    }
 }
 
 
