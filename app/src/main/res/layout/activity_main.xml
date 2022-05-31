@@ -39,8 +39,8 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/itemListFragment"
+    <ListView
+        android:id="@+id/listviewTask"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -49,8 +49,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailHeader">
-
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/emailHeader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
