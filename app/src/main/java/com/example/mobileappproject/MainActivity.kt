@@ -4,19 +4,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-
-
 import android.widget.*
-
 import com.example.mobileappproject.extensions.goToLoginActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 
-
 class MainActivity : AppCompatActivity(), TaskRowListener {
+
+    private lateinit var footerToggle : Button
+    private lateinit var footer : RelativeLayout
+    private lateinit var txtNewTaskDesc: EditText
 
     lateinit var _db: DatabaseReference
     var _taskList: MutableList<Task>? = null
@@ -26,6 +24,10 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        footerToggle = findViewById(R.id.footerToggle)
+        footer = findViewById(R.id.footer)
+        txtNewTaskDesc = findViewById(R.id.txtNewTaskDesc)
+
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
         _taskList = mutableListOf()
         _adapter = TaskAdapter(this, _taskList!!)
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
 
         val email = findViewById<TextView>(R.id.email)
         val logoutBtn = findViewById<Button>(R.id.logoutBtn)
+        val AddBtn = findViewById<ImageButton>(R.id.btnAdd)
 
         val user = Firebase.auth.currentUser
         if (user != null) {
@@ -52,6 +55,10 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         }
 
         _db.orderByKey().addValueEventListener(_taskListener)
+
+        footerToggle.setOnClickListener { toggleFooter() }
+
+        AddBtn.setOnClickListener{ addTask() }
 
         logoutBtn.setOnClickListener{
             Firebase.auth.signOut()
@@ -89,24 +96,34 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         _adapter.notifyDataSetChanged()
     }
 
-//    fun addTask(){
-//        //Declare and Initialise the Task
-//        val task = Task.create()
-//        //Set Task Description and isDone Status
-//        task.taskDesc = findViewById<EditText>(com.google.firebase.database.R.id.txtNewTaskDesc).text.toString()
-//        task.done = false
-//        //Get the object id for the new task from the Firebase Database
-//        val newTask = _db.child(Statics.FIREBASE_TASK).push()
-//        task.objectId = newTask.key
-//        //Set the values for new task in the firebase using the footer form
-//        newTask.setValue(task)
-//        //Hide the footer and show the floating button
-//        findViewById<RelativeLayout>(com.google.firebase.database.R.id.footer).visibility = View.GONE
-//        findViewById<FloatingActionButton>(com.google.firebase.database.R.id.fab).visibility = View.VISIBLE
-//        //Reset the new task description field for reuse.
-//        findViewById<EditText>(com.google.firebase.database.R.id.txtNewTaskDesc).setText("")
-//        Toast.makeText(this, "Task added to the list successfully" + task.objectId, Toast.LENGTH_SHORT).show()
-//    }
+    private fun toggleFooter(){
+        if (footer.visibility == View.GONE) {
+            footer.visibility = View.VISIBLE
+            footerToggle.visibility = View.GONE
+        } else {
+            footer.visibility = View.GONE
+            footerToggle.visibility = View.VISIBLE
+        }
+    }
+
+    private fun addTask() {
+        //Declare and Initialise the Task
+        val task = Task.create()
+        //Set Task Description and isDone Status
+        task.taskDesc = txtNewTaskDesc.text.toString()
+        task.done = false
+        //Get the object id for the new task from the Firebase Database
+        val newTask = _db.child(Statics.FIREBASE_TASK).push()
+        task.objectId = newTask.key
+        //Set the values for new task in the firebase using the footer form
+        newTask.setValue(task)
+        //Hide the footer and show the floating button
+        footer.visibility = View.GONE
+        footerToggle.visibility = View.VISIBLE
+        //Reset the new task description field for reuse.
+        txtNewTaskDesc.setText("")
+        Toast.makeText(this, "Task added to the list successfully" + task.objectId, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onTaskChange(objectId: String, isDone: Boolean) {
         val task = _db.child(Statics.FIREBASE_TASK).child(objectId)
