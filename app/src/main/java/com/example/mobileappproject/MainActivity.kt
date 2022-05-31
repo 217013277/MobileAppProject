@@ -1,9 +1,11 @@
 package com.example.mobileappproject
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.example.mobileappproject.extensions.goToLoginActivity
 import com.google.firebase.auth.ktx.auth
@@ -58,7 +60,9 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
 
         footerToggle.setOnClickListener { toggleFooter() }
 
-        AddBtn.setOnClickListener{ addTask() }
+        AddBtn.setOnClickListener{
+            addTask()
+        }
 
         logoutBtn.setOnClickListener{
             Firebase.auth.signOut()
@@ -118,11 +122,16 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         //Set the values for new task in the firebase using the footer form
         newTask.setValue(task)
         //Hide the footer and show the floating button
-        footer.visibility = View.GONE
-        footerToggle.visibility = View.VISIBLE
+        toggleFooter()
+        closeKeyboard(txtNewTaskDesc)
         //Reset the new task description field for reuse.
         txtNewTaskDesc.setText("")
         Toast.makeText(this, "Task added to the list successfully" + task.objectId, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun closeKeyboard (view: View) {
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onTaskChange(objectId: String, isDone: Boolean) {
