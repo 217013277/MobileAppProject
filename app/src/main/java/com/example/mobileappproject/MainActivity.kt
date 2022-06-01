@@ -42,8 +42,9 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         recyclerview.adapter = _adapter
         _adapter.setOnItemClickListener(object : RecyclerViewAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                Toast.makeText(this@MainActivity,"You clicked on item $position", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(this@MainActivity,
+                    "You clicked on item $position",
+                    Toast.LENGTH_SHORT).show()
             }
 
         })
@@ -125,14 +126,19 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
     }
 
     override fun onTaskChange(objectId: String, isDone: Boolean) {
-        val task = _db.child(Statics.FIREBASE_TASK).child(objectId)
+
+        //_db.child(Statics.FIREBASE_TASK).child(objectId).updateChildren()
         Log.d("MainActivity", "Done Button click")
     }
 
     override fun onTaskDelete(objectId: String) {
-        val task = _db.child(Statics.FIREBASE_TASK).child(objectId)
-        task.removeValue()
-        Toast.makeText(this, "Remove button clicked $objectId", Toast.LENGTH_SHORT).show()
+        _db.child(Statics.FIREBASE_TASK).child(objectId).removeValue().addOnCompleteListener{
+            Toast.makeText(this, "Remove $objectId", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener{
+            Toast.makeText(this, "Cannot remove $objectId", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
     private fun toggleFooter(){

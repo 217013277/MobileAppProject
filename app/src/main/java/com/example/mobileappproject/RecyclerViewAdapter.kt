@@ -30,13 +30,14 @@ class RecyclerViewAdapter(private val context: Context, private val taskList: Mu
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val desc: String? = _taskList[position].taskDesc
+        val desc: String = _taskList[position].taskDesc.toString()
         val done: Boolean = _taskList[position].done
+        val objectId: String = _taskList[position].objectId.toString()
 
         holder.desc.text = desc
         holder.done.isChecked = done
-        holder.done.setOnClickListener{ _rowListener.onTaskChange(position.toString(), !done) }
-        holder.remove.setOnClickListener{ _rowListener.onTaskDelete(position.toString()) }
+        holder.done.setOnClickListener{ _rowListener.onTaskChange(objectId, !done) }
+        holder.remove.setOnClickListener{ _rowListener.onTaskDelete(objectId) }
     }
 
     override fun getItemCount(): Int {
