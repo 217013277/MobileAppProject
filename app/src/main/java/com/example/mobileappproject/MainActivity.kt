@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
 
         val user = Firebase.auth.currentUser
         if (user != null) {
-            email.text = user.displayName
+            email.text = user.email
         } else {
             email.text = getString(R.string.no_user_found)
         }
