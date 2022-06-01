@@ -88,11 +88,11 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
                 val currentItem = itemsIterator.next()
                 val task = Task.create()
                 //get current data in a map
-                val map = currentItem.value as HashMap<String, Any>
+                val map = currentItem.value as HashMap<*, *>
                 //key will return the Firebase ID
                 task.objectId = currentItem.key
-                task.done = map.get("done") as Boolean?
-                task.taskDesc = map.get("taskDesc") as String?
+                task.done = map["done"] as Boolean?
+                task.taskDesc = map["taskDesc"] as String?
                 _taskList!!.add(task)
             }
         }
