@@ -39,7 +39,7 @@
 
     </LinearLayout>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listviewTask"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -47,7 +47,9 @@
         app:layout_constraintBottom_toTopOf="@+id/footerToggle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailHeader" />
+        app:layout_constraintTop_toBottomOf="@id/emailHeader"
+        tools:itemCount="5"
+        tools:listitem="@layout/card_view_design"/>
 
     <Button
         android:id="@+id/footerToggle"

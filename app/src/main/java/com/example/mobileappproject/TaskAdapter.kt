@@ -16,9 +16,9 @@ class TaskAdapter(context: Context, taskList: MutableList<Task>) : BaseAdapter()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-        val objectId: String = _taskList.get(position).objectId as String
-        val itemText: String = _taskList.get(position).taskDesc as String
-        val done: Boolean = _taskList.get(position).done as Boolean
+        val objectId: String = _taskList[position].objectId as String
+        val itemText: String = _taskList[position].taskDesc as String
+        val done: Boolean = _taskList[position].done as Boolean
 
         val view: View
         val listRowHolder: ListRowHolder
@@ -38,8 +38,6 @@ class TaskAdapter(context: Context, taskList: MutableList<Task>) : BaseAdapter()
         }
         listRowHolder.remove.setOnClickListener {
             _rowListener.onTaskDelete(objectId) }
-
-
 
         return view
     }

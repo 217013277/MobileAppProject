@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappproject.extensions.goToLoginActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -20,7 +22,8 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
 
     lateinit var _db: DatabaseReference
     var _taskList: MutableList<Task>? = null
-    lateinit var _adapter: TaskAdapter
+//    lateinit var _adapter: TaskAdapter
+    lateinit var _adapter: RecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +35,22 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
 
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
         _taskList = mutableListOf()
-        _adapter = TaskAdapter(this, _taskList!!)
-        findViewById<ListView>(R.id.listviewTask)!!.setAdapter(_adapter)
+//        _adapter = TaskAdapter(this, _taskList!!)
+        _adapter = RecyclerViewAdapter(this, _taskList!!)
+        val recyclerview = findViewById<RecyclerView>(R.id.listviewTask)
+        recyclerview.layoutManager = LinearLayoutManager(this)
+        recyclerview.adapter = _adapter
+        _adapter.setOnItemClickListener(object : RecyclerViewAdapter.OnItemClickListener{
+            override fun onItemClick(position: Int) {
+                Toast.makeText(this@MainActivity,"You clicked on item $position", Toast.LENGTH_SHORT).show()
+
+            }
+
+        })
 
         val email = findViewById<TextView>(R.id.email)
         val logoutBtn = findViewById<Button>(R.id.logoutBtn)
-        val AddBtn = findViewById<ImageButton>(R.id.btnAdd)
+        val addBtn = findViewById<ImageButton>(R.id.btnAdd)
 
         val user = Firebase.auth.currentUser
         if (user != null) {
@@ -59,19 +72,11 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         _db.orderByKey().addValueEventListener(_taskListener)
 
         footerToggle.setOnClickListener { toggleFooter() }
-
-        AddBtn.setOnClickListener{
-            addTask()
-        }
-
+        addBtn.setOnClickListener{ addTask() }
         logoutBtn.setOnClickListener{
             Firebase.auth.signOut()
             goToLogin()
         }
-    }
-
-    private fun goToLogin(){
-        goToLoginActivity(this)
     }
 
     private fun loadTaskList(dataSnapshot: DataSnapshot) {
@@ -91,23 +96,13 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
                 val map = currentItem.value as HashMap<*, *>
                 //key will return the Firebase ID
                 task.objectId = currentItem.key
-                task.done = map["done"] as Boolean?
+                task.done = map["done"] as Boolean
                 task.taskDesc = map["taskDesc"] as String?
                 _taskList!!.add(task)
             }
         }
         //alert adapter that has changed
         _adapter.notifyDataSetChanged()
-    }
-
-    private fun toggleFooter(){
-        if (footer.visibility == View.GONE) {
-            footer.visibility = View.VISIBLE
-            footerToggle.visibility = View.GONE
-        } else {
-            footer.visibility = View.GONE
-            footerToggle.visibility = View.VISIBLE
-        }
     }
 
     private fun addTask() {
@@ -129,17 +124,33 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         Toast.makeText(this, "Task added to the list successfully" + task.objectId, Toast.LENGTH_SHORT).show()
     }
 
-    private fun closeKeyboard (view: View) {
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
     override fun onTaskChange(objectId: String, isDone: Boolean) {
         val task = _db.child(Statics.FIREBASE_TASK).child(objectId)
+        Log.d("MainActivity", "Done Button click")
     }
 
     override fun onTaskDelete(objectId: String) {
         val task = _db.child(Statics.FIREBASE_TASK).child(objectId)
         task.removeValue()
+        Toast.makeText(this, "Remove button clicked $objectId", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toggleFooter(){
+        if (footer.visibility == View.GONE) {
+            footer.visibility = View.VISIBLE
+            footerToggle.visibility = View.GONE
+        } else {
+            footer.visibility = View.GONE
+            footerToggle.visibility = View.VISIBLE
+        }
+    }
+
+    private fun closeKeyboard (view: View) {
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun goToLogin(){
+        goToLoginActivity(this)
     }
 }
