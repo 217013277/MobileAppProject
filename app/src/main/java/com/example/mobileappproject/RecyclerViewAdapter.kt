@@ -17,6 +17,7 @@ class RecyclerViewAdapter(private val context: Context, private val taskList: Mu
     private var _taskList = taskList
     private var _rowListener: TaskRowListener = context as TaskRowListener
 
+    //Set click event on whole item
     private lateinit var mListener: OnItemClickListener
     interface OnItemClickListener { fun onItemClick(position: Int) }
     fun setOnItemClickListener(listener: OnItemClickListener) { mListener = listener }
@@ -37,7 +38,7 @@ class RecyclerViewAdapter(private val context: Context, private val taskList: Mu
         holder.desc.text = desc
         holder.done.isChecked = done
         holder.done.setOnClickListener{ _rowListener.onTaskChange(objectId, !done) }
-        holder.remove.setOnClickListener{ _rowListener.onTaskDelete(objectId) }
+        holder.remove.setOnClickListener{ _rowListener.onTaskDelete(objectId, desc) }
     }
 
     override fun getItemCount(): Int {

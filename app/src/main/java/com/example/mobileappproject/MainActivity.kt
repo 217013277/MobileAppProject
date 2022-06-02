@@ -126,18 +126,19 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
     }
 
     override fun onTaskChange(objectId: String, isDone: Boolean) {
-        _db.child(Statics.FIREBASE_TASK).child(objectId).child("done").setValue(isDone)
-        Log.d("MainActivity", "Done Button click")
+        _db.child(Statics.FIREBASE_TASK).child(objectId).child("done").setValue(isDone).addOnCompleteListener{
+            Toast.makeText(this, "Update successfully", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener{
+            Toast.makeText(this, "Cannot update", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    override fun onTaskDelete(objectId: String) {
+    override fun onTaskDelete(objectId: String, desc: String) {
         _db.child(Statics.FIREBASE_TASK).child(objectId).removeValue().addOnCompleteListener{
-            Toast.makeText(this, "Remove $objectId", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Removed $desc ID: $objectId", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener{
-            Toast.makeText(this, "Cannot remove $objectId", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Cannot remove $desc ID: $objectId", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     private fun toggleFooter(){
