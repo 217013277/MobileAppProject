@@ -20,17 +20,17 @@ import java.util.*
 class LocationActivity : AppCompatActivity() {
 
     // member views
-    protected var mLatitudeText: TextView? = null
-    protected var mLongitudeText: TextView? = null
-    protected var mTimeText: TextView? = null
-    protected var mOutput: TextView? = null
-    protected var mLocateButton: Button? = null
+    private var mLatitudeText: TextView? = null
+    private var mLongitudeText: TextView? = null
+    private var mTimeText: TextView? = null
+    private var mOutput: TextView? = null
+    private var mLocateButton: Button? = null
 
     // member variables that hold location info
-    protected var mLastLocation: Location? = null
-    protected var mLocationRequest: LocationRequest? = null
-    protected var mGeocoder: Geocoder? = null
-    protected var mLocationProvider: FusedLocationProviderClient? = null
+    private var mLastLocation: Location? = null
+    private var mLocationRequest: LocationRequest? = null
+    private var mGeocoder: Geocoder? = null
+    private var mLocationProvider: FusedLocationProviderClient? = null
 
     companion object {
         var REQUEST_LOCATION = 1
@@ -94,14 +94,12 @@ class LocationActivity : AppCompatActivity() {
             )
         )
 
-
-        // LocationReques sets how often etc the app receives location updates
-
-
-        mLocationRequest = LocationRequest()
-        mLocationRequest!!.interval = 10
-        mLocationRequest!!.fastestInterval = 5
-        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        // LocationRequest sets how often etc the app receives location updates
+        mLocationRequest = LocationRequest
+            .create()
+            .setInterval(10)
+            .setFastestInterval(5)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
     }
 
     fun onStartClicked(v:View?) {
