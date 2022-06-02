@@ -78,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext,
                         "Authentication succeeded!", Toast.LENGTH_SHORT)
                         .show()
-                    goToMain()
+                    goToMainActivity(this@LoginActivity)
                 }
 
                 override fun onAuthenticationFailed() {
@@ -122,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
             Firebase.auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful){
 //                    AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
-                    goToMain()
+                    goToMainActivity(this)
                     finish()
                 }
             }.addOnFailureListener { exception ->
@@ -163,25 +163,13 @@ class LoginActivity : AppCompatActivity() {
         Firebase.auth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
                 finish()
-                goToMain()
+                goToMainActivity(this)
             }
         }
     }
 
-    private fun goToMain(){
-//        val intent= Intent(this,MainActivity::class.java)
-//        startActivity(intent)
-        goToMainActivity(this)
-    }
-
-    private fun goToRegister(){
-//        val intent= Intent(this,RegisterActivity::class.java)
-//        startActivity(intent)
-        goToRegisterActivity(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         val biometricBtn = findViewById<ImageButton>(R.id.biometricBtn)
         val tvAskIfAccount = findViewById<TextView>(R.id.tvAskIfAccountExisted)
         val goToRegisterBtn = findViewById<TextView>(R.id.tvToRegister)
@@ -193,14 +181,14 @@ class LoginActivity : AppCompatActivity() {
 
             tvAskIfAccount.text = getString(R.string.do_not_have_an_account)
             goToRegisterBtn.setOnClickListener{
-                goToRegister()
+                goToRegisterActivity(this)
             }
         } else {
             tvAskIfAccount.text = getString(R.string.want_to_sign_in_with_another_account)
             goToRegisterBtn.text = getString(R.string.logout)
             goToRegisterBtn.setOnClickListener{
                 Firebase.auth.signOut()
-                goToRegister()
+                goToRegisterActivity(this)
             }
         }
     }

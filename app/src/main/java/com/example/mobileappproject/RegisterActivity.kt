@@ -33,7 +33,7 @@ class RegisterActivity : AppCompatActivity() {
         val goToLoginBtn = findViewById<TextView>(R.id.tvToLogin)
         goToLoginBtn.setOnClickListener{
             Toast.makeText(this,"go to Register Page",Toast.LENGTH_SHORT).show()
-            goToLogin()
+            goToLoginActivity(this)
         }
 
 //        firebaseAuth = FirebaseAuth.getInstance()
@@ -58,7 +58,7 @@ class RegisterActivity : AppCompatActivity() {
                     if(task.isSuccessful){
 //                firebaseAuth.currentUser
                         finish()
-                        goToMain()
+                        goToMainActivity(this)
                     }
                 }.addOnFailureListener { exception ->
                     Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
@@ -71,20 +71,12 @@ class RegisterActivity : AppCompatActivity() {
         return firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isAnonymous == true
     }
 
-    private fun goToMain(){
-        goToMainActivity(this)
-    }
-
-    private fun goToLogin(){
-        goToLoginActivity(this)
-    }
-
-    // if you do not add this check, then you would have to login everytime you start your application on your phone.
+    // add this check, then you would have to login everytime you start your application on your phone.
     override fun onStart() {
         super.onStart()
         val user = Firebase.auth.currentUser
         if(user!=null){
-            goToLogin()
+            goToLoginActivity(this)
         }
     }
 }

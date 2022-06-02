@@ -51,35 +51,61 @@
         tools:itemCount="5"
         tools:listitem="@layout/place_rows"/>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_alignParentBottom="true">
 
         <EditText
-            android:id="@+id/txtNewTaskDesc"
+            android:id="@+id/etPlaceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/btnAdd"
-            android:layout_centerVertical="true"
-            android:textColor="@android:color/black"
-            android:hint="Type something"
-            android:autofillHints="off" />
+            android:autofillHints="off"
+            android:hint="Place name"
+            android:inputType="none"
+            app:layout_constraintBottom_toTopOf="@id/secondColumn"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageButton
-            android:id="@+id/btnAdd"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/secondColumn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="Confirm"
-            android:gravity="end"
-            app:srcCompat="@android:drawable/ic_menu_save" />
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_alignParentBottom="true">
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/etPlaceDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/btnAdd"
+                android:layout_centerVertical="true"
+                android:hint="Type something"
+                android:autofillHints="off"
+                android:inputType="none" />
+
+            <ImageButton
+                android:id="@+id/btnAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="Confirm"
+                android:gravity="end"
+                app:srcCompat="@android:drawable/ic_menu_save" />
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

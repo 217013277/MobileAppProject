@@ -16,7 +16,8 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : AppCompatActivity(), PlaceRowListener {
 
     private lateinit var footer : RelativeLayout
-    private lateinit var txtNewTaskDesc: EditText
+    private lateinit var etPlaceName: EditText
+    private lateinit var etPlaceDesc: EditText
 
     lateinit var _db: DatabaseReference
     var _placeList: MutableList<Place>? = null
@@ -27,8 +28,8 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        footer = findViewById(R.id.footer)
-        txtNewTaskDesc = findViewById(R.id.txtNewTaskDesc)
+        etPlaceName = findViewById(R.id.etPlaceName)
+        etPlaceDesc = findViewById(R.id.etPlaceDesc)
 
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
         _placeList = mutableListOf()
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         addBtn.setOnClickListener{ addTask() }
         logoutBtn.setOnClickListener{
             Firebase.auth.signOut()
-            goToLogin()
+            goToLoginActivity(this)
         }
     }
 
@@ -109,8 +110,8 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         //Declare and Initialise the Task
         val place = Place.create()
         //Set Task Description and isDone Status
-        place.placeName = txtNewTaskDesc.text.toString()
-        place.placeDesc = txtNewTaskDesc.text.toString()
+        place.placeName = etPlaceName.text.toString()
+        place.placeDesc = etPlaceDesc.text.toString()
         place.isFav = false
         //Get the object id for the new task from the Firebase Database
         val newTask = _db.child(PlaceStatics.FIREBASE_TASK).push()
@@ -121,7 +122,8 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 //        toggleFooter()
 //        closeKeyboard(txtNewTaskDesc)
         //Reset the new task description field for reuse.
-        txtNewTaskDesc.setText("")
+        etPlaceName.setText("")
+        etPlaceDesc.setText("")
         Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
     }
 
@@ -155,8 +157,4 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 //        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 //        imm.hideSoftInputFromWindow(view.windowToken, 0)
 //    }
-
-    private fun goToLogin(){
-        goToLoginActivity(this)
-    }
 }
