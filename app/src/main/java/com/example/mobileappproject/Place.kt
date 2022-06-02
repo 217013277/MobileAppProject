@@ -9,8 +9,8 @@ class Place {
         fun create(): Place = Place()
     }
 
-    var placeObjectId: String? = null
+    var objectId: String? = null
     var placeName: String? = null
     var placeDesc: String? = null
-    var placeFav: Boolean? = false
+    var isFav: Boolean? = false
 }

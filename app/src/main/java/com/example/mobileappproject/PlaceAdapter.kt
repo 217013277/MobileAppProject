@@ -32,14 +32,14 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val name: String = _placeList[position].placeName.toString()
         val desc: String = _placeList[position].placeDesc.toString()
-        val isFav: Boolean = _placeList[position].placeFav.toString().toBoolean()
-        val objectId: String = _placeList[position].placeObjectId.toString()
+        val isFav: Boolean = _placeList[position].isFav.toString().toBoolean()
+        val objectId: String = _placeList[position].objectId.toString()
 
         holder.name.text = name
         holder.desc.text = desc
         holder.isFav.isChecked = isFav
         holder.isFav.setOnClickListener{ _rowListener.onFavClick(objectId, !isFav) }
-        holder.removeBtn.setOnClickListener{ _rowListener.onPlaceDelete(objectId, desc) }
+        holder.removeBtn.setOnClickListener{ _rowListener.onPlaceDelete(objectId, name) }
     }
 
     override fun getItemCount(): Int {
