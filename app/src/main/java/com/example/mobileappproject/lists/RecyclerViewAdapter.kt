@@ -1,4 +1,4 @@
-package com.example.mobileappproject
+package com.example.mobileappproject.lists
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.mobileappproject.R
 
 class RecyclerViewAdapter(private val context: Context, private val taskList: MutableList<Task>) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {

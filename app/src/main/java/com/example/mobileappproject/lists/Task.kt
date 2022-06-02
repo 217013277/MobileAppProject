@@ -1,4 +1,4 @@
-package com.example.mobileappproject
+package com.example.mobileappproject.lists
 
 object Statics {
     @JvmStatic val FIREBASE_TASK: String = "task"

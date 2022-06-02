@@ -7,9 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 
 fun biometricAuth (fragmentActivity: FragmentActivity, context: Context): Boolean {
-    var isSucceed = false
+    var isSucceed = true
 
-    //Biometric
     val executor = ContextCompat.getMainExecutor(context)
 
     val biometricPrompt = BiometricPrompt(fragmentActivity,executor,
@@ -40,10 +39,9 @@ fun biometricAuth (fragmentActivity: FragmentActivity, context: Context): Boolea
                     .show()
                 isSucceed = false
             }
-
         })
 
-        biometricPrompt.authenticate(promptInfo)
+    biometricPrompt.authenticate(promptInfo)
 
     return isSucceed
 }

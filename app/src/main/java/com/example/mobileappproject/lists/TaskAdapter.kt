@@ -1,4 +1,4 @@
-package com.example.mobileappproject
+package com.example.mobileappproject.lists
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import com.example.mobileappproject.R
 
 class TaskAdapter(context: Context, taskList: MutableList<Task>) : BaseAdapter() {
     private val _inflater: LayoutInflater = LayoutInflater.from(context)

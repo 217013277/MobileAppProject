@@ -8,7 +8,12 @@ import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobileappproject.extensions.goToBiometricActivity
 import com.example.mobileappproject.extensions.goToLoginActivity
+import com.example.mobileappproject.lists.Place
+import com.example.mobileappproject.lists.PlaceAdapter
+import com.example.mobileappproject.lists.PlaceRowListener
+import com.example.mobileappproject.lists.PlaceStatics
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -141,6 +146,11 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         }.addOnFailureListener{
             Toast.makeText(this, "Cannot remove $placeName ID: $objectId", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        goToBiometricActivity(this)
     }
 
 //    private fun toggleFooter(){

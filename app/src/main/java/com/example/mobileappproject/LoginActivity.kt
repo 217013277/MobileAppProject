@@ -26,7 +26,6 @@ import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
-    private lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
@@ -49,9 +48,8 @@ class LoginActivity : AppCompatActivity() {
             .requestIdToken(getString(R.string.app_web_client_id))
             .requestEmail()
             .build()
-        // getting the value of gso inside the GoogleSigninClient
+        // getting the value of gso inside the GoogleSignInClient
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
-//        firebaseAuth = FirebaseAuth.getInstance()
 
         googleSignIn.setOnClickListener{
             Toast.makeText(this,"Logging In",Toast.LENGTH_SHORT).show()
@@ -98,13 +96,6 @@ class LoginActivity : AppCompatActivity() {
 
         biometricLoginButton.setOnClickListener {
             biometricPrompt.authenticate(promptInfo)
-
-//            val isBiometricAuthSucceed = biometricAuth(this,this)
-//            if (isBiometricAuthSucceed) {
-//                Log.d("test biometric", "SUCCESS")
-//            } else {
-//                Log.d("test biometric", "FAIL")
-//            }
         }
     }
 
