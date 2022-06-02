@@ -44,22 +44,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
-        app:layout_constraintBottom_toTopOf="@+id/footerToggle"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailHeader"
         tools:itemCount="5"
-        tools:listitem="@layout/card_view_design"/>
-
-    <Button
-        android:id="@+id/footerToggle"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Add"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/footer"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        tools:listitem="@layout/place_rows"/>
 
     <RelativeLayout
         android:id="@+id/footer"
@@ -67,7 +57,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"
         android:layout_alignParentBottom="true">
 
         <EditText

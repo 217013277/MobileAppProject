@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-class RecyclerViewAdapter(private val context: Context, private val taskList: MutableList<Task>) :
-    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class PlaceAdapter(private val context: Context, private val placeList: MutableList<Place>) :
+    RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
     private val _inflater: LayoutInflater = LayoutInflater.from(context)
-    private var _taskList = taskList
-    private var _rowListener: TaskRowListener = context as TaskRowListener
+    private var _placeList = placeList
+    private var _rowListener: PlaceRowListener = context as PlaceRowListener
 
     //Set click event on whole item
     private lateinit var mListener: OnItemClickListener
@@ -25,29 +25,32 @@ class RecyclerViewAdapter(private val context: Context, private val taskList: Mu
         // inflates the card_view_design view
         // that is used to hold list item
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.task_rows, parent, false)
+            .inflate(R.layout.place_rows, parent, false)
         return ViewHolder(view, mListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val desc: String = _taskList[position].taskDesc.toString()
-        val done: Boolean = _taskList[position].done.toString().toBoolean()
-        val objectId: String = _taskList[position].objectId.toString()
+        val name: String = _placeList[position].placeName.toString()
+        val desc: String = _placeList[position].placeDesc.toString()
+        val isFav: Boolean = _placeList[position].placeFav.toString().toBoolean()
+        val objectId: String = _placeList[position].placeObjectId.toString()
 
+        holder.name.text = name
         holder.desc.text = desc
-        holder.done.isChecked = done
-        holder.done.setOnClickListener{ _rowListener.onTaskChange(objectId, !done) }
-        holder.remove.setOnClickListener{ _rowListener.onTaskDelete(objectId, desc) }
+        holder.isFav.isChecked = isFav
+        holder.isFav.setOnClickListener{ _rowListener.onFavClick(objectId, !isFav) }
+        holder.removeBtn.setOnClickListener{ _rowListener.onPlaceDelete(objectId, desc) }
     }
 
     override fun getItemCount(): Int {
-        return _taskList.size
+        return _placeList.size
     }
 
     class ViewHolder(ItemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(ItemView) {
-        val desc: TextView = itemView.findViewById(R.id.txtTaskDesc) as TextView
-        val done: CheckBox = itemView.findViewById(R.id.chkDone) as CheckBox
-        val remove: ImageButton = itemView.findViewById(R.id.btnRemove) as ImageButton
+        val name: TextView = itemView.findViewById(R.id.tvPlaceName) as TextView
+        val desc: TextView = itemView.findViewById(R.id.tvPlaceDesc) as TextView
+        val isFav: CheckBox = itemView.findViewById(R.id.imgPlaceFav) as CheckBox
+        val removeBtn: ImageButton = itemView.findViewById(R.id.btnRemove) as ImageButton
 
         init {
             itemView.setOnClickListener{ listener.onItemClick(bindingAdapterPosition) }

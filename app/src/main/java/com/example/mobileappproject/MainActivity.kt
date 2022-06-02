@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        footerToggle = findViewById(R.id.footerToggle)
         footer = findViewById(R.id.footer)
         txtNewTaskDesc = findViewById(R.id.txtNewTaskDesc)
 
@@ -72,7 +71,6 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
 
         _db.orderByKey().addValueEventListener(_taskListener)
 
-        footerToggle.setOnClickListener { toggleFooter() }
         addBtn.setOnClickListener{ addTask() }
         logoutBtn.setOnClickListener{
             Firebase.auth.signOut()
@@ -118,8 +116,8 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         //Set the values for new task in the firebase using the footer form
         newTask.setValue(task)
         //Hide the footer and show the floating button
-        toggleFooter()
-        closeKeyboard(txtNewTaskDesc)
+//        toggleFooter()
+//        closeKeyboard(txtNewTaskDesc)
         //Reset the new task description field for reuse.
         txtNewTaskDesc.setText("")
         Toast.makeText(this, "Task added to the list successfully" + task.objectId, Toast.LENGTH_SHORT).show()
@@ -141,20 +139,20 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
         }
     }
 
-    private fun toggleFooter(){
-        if (footer.visibility == View.GONE) {
-            footer.visibility = View.VISIBLE
-            footerToggle.visibility = View.GONE
-        } else {
-            footer.visibility = View.GONE
-            footerToggle.visibility = View.VISIBLE
-        }
-    }
-
-    private fun closeKeyboard (view: View) {
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
+//    private fun toggleFooter(){
+//        if (footer.visibility == View.GONE) {
+//            footer.visibility = View.VISIBLE
+//            footerToggle.visibility = View.GONE
+//        } else {
+//            footer.visibility = View.GONE
+//            footerToggle.visibility = View.VISIBLE
+//        }
+//    }
+//
+//    private fun closeKeyboard (view: View) {
+//        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(view.windowToken, 0)
+//    }
 
     private fun goToLogin(){
         goToLoginActivity(this)
