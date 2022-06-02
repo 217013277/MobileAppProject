@@ -14,6 +14,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.225" />
         <entry key="app/src/main/res/drawable/thump_up_selector.xml" value="0.187" />
         <entry key="app/src/main/res/layout/activity_biometric.xml" value="0.20416666666666666" />
+        <entry key="app/src/main/res/layout/activity_location.xml" value="0.27177700348432055" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2838541666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.2796875" />
