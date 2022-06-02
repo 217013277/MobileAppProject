@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MobileAppProject</string>
+    <string name="app_name">Checkout</string>
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="register">REGISTER</string>
