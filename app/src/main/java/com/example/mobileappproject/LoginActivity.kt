@@ -57,46 +57,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         //Biometric
-        executor = ContextCompat.getMainExecutor(this)
-
-        biometricPrompt = BiometricPrompt(this, executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-
-                override fun onAuthenticationError(errorCode: Int,
-                                                   errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(applicationContext,
-                        "Authentication error: $errString", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-                override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    Toast.makeText(applicationContext,
-                        "Authentication succeeded!", Toast.LENGTH_SHORT)
-                        .show()
-                    goToMainActivity(this@LoginActivity)
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    Toast.makeText(applicationContext, "Authentication failed",
-                        Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-            })
-
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
-            .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use account password")
-            .build()
-
-        biometricLoginButton.setOnClickListener {
-            biometricPrompt.authenticate(promptInfo)
-        }
+        biometricLoginButton.setOnClickListener { openBiometricAuth() }
     }
 
     // Email and password login
@@ -147,6 +108,13 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show()
             Log.d("ApiException",e.toString())
         }
+    }
+
+    private fun openBiometricAuth() {
+        val onSucceeded = Runnable {
+            goToMainActivity(this)
+        }
+        biometricAuth(this, this, onSucceeded)
     }
 
     private fun updateUI(account: GoogleSignInAccount){
