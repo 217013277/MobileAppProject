@@ -31,7 +31,7 @@ class RecyclerViewAdapter(private val context: Context, private val taskList: Mu
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val desc: String = _taskList[position].taskDesc.toString()
-        val done: Boolean = _taskList[position].done
+        val done: Boolean = _taskList[position].done.toString().toBoolean()
         val objectId: String = _taskList[position].objectId.toString()
 
         holder.desc.text = desc

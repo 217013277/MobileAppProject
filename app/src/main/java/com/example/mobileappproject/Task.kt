@@ -1,21 +1,15 @@
 package com.example.mobileappproject
 
-import com.google.firebase.firestore.Exclude
+object Statics {
+    @JvmStatic val FIREBASE_TASK: String = "task"
+}
 
 class Task {
     companion object Factory {
         fun create(): Task = Task()
-
     }
 
     var objectId: String? = null
     var taskDesc: String? = null
-    var done: Boolean = false
-
-    @Exclude
-    fun toMap(): Map<String, Any>{
-        return mapOf(
-            "done" to done
-        )
-    }
+    var done: Boolean? = false
 }

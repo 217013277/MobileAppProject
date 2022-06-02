@@ -126,8 +126,7 @@ class MainActivity : AppCompatActivity(), TaskRowListener {
     }
 
     override fun onTaskChange(objectId: String, isDone: Boolean) {
-
-        //_db.child(Statics.FIREBASE_TASK).child(objectId).updateChildren()
+        _db.child(Statics.FIREBASE_TASK).child(objectId).child("done").setValue(isDone)
         Log.d("MainActivity", "Done Button click")
     }
 
