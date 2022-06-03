@@ -24,6 +24,7 @@
         android:id="@+id/etPlaceDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_toStartOf="@+id/btnAdd"
         android:autofillHints="off"
         android:hint="Description"
@@ -36,6 +37,7 @@
         android:id="@+id/LatitudeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_toStartOf="@+id/btnAdd"
         android:paddingStart="8sp"
         android:text="Latitude: "
@@ -58,6 +60,7 @@
         android:id="@+id/LongitudeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_toStartOf="@+id/btnAdd"
         android:paddingStart="8sp"
         android:text="Longitude"
@@ -88,5 +91,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_menu_save" />
+
+    <Button
+        android:id="@+id/getLocationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Get Location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LongitudeTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
