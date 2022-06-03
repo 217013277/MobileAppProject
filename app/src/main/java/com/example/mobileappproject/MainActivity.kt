@@ -14,6 +14,7 @@ import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceAdapter
 import com.example.mobileappproject.lists.PlaceRowListener
 import com.example.mobileappproject.lists.PlaceStatics
+import com.example.mobileappproject.sharedPreferences.PostTemplate
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -150,7 +151,15 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
     override fun onPause() {
         super.onPause()
+        PostTemplate.setPlaceName(this, etPlaceName.text.toString())
+        PostTemplate.setPlaceDesc(this, etPlaceDesc.text.toString())
         goToBiometricActivity(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        etPlaceName.setText(PostTemplate.getPlaceName(this))
+        etPlaceDesc.setText(PostTemplate.getPlaceDesc(this))
     }
 
 //    private fun toggleFooter(){
