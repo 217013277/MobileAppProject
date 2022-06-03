@@ -1,7 +1,6 @@
 package com.example.mobileappproject
 
 import android.annotation.SuppressLint
-import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,45 +8,26 @@ import android.view.View
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobileappproject.extensions.goToAddPlaceActivity
 import com.example.mobileappproject.extensions.goToBiometricActivity
-import com.example.mobileappproject.extensions.goToLoginActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceAdapter
 import com.example.mobileappproject.lists.PlaceRowListener
 import com.example.mobileappproject.lists.PlaceStatics
-import com.example.mobileappproject.sharedPreferences.PostTemplate
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import java.text.DateFormat
-import java.util.*
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity(), PlaceRowListener {
-
-    private lateinit var footer : RelativeLayout
-    private lateinit var etPlaceName: EditText
-    private lateinit var etPlaceDesc: EditText
 
     lateinit var _db: DatabaseReference
     var _placeList: MutableList<Place>? = null
     lateinit var _adapter: PlaceAdapter
 
-    private var mLastLocation: Location? = null
-    var mLocationCallBack: LocationCallback = object : LocationCallback() {
-        override fun onLocationResult(result: LocationResult) {
-            mLastLocation = result.lastLocation
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        etPlaceName = findViewById(R.id.etPlaceName)
-        etPlaceDesc = findViewById(R.id.etPlaceDesc)
 
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
         _placeList = mutableListOf()
@@ -62,19 +42,17 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
                     "You clicked on item $position",
                     Toast.LENGTH_SHORT).show()
             }
-
         })
 
         val email = findViewById<TextView>(R.id.email)
-        val logoutBtn = findViewById<Button>(R.id.logoutBtn)
-        val addBtn = findViewById<ImageButton>(R.id.btnAdd)
+        val accountBtn = findViewById<Button>(R.id.AccountBtn)
 
         val user = Firebase.auth.currentUser
         if (user != null) {
             email.text = user.email
         } else {
             email.text = getString(R.string.no_user_found)
-            logoutBtn.visibility = View.GONE
+            accountBtn.visibility = View.GONE
         }
 
         val _taskListener: ValueEventListener = object : ValueEventListener {
@@ -89,11 +67,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
         _db.orderByKey().addValueEventListener(_taskListener)
 
-        addBtn.setOnClickListener{ addTask() }
-        logoutBtn.setOnClickListener{
-            Firebase.auth.signOut()
-            goToLoginActivity(this)
-        }
+        findViewById<Button>(R.id.goToAddPlaceBtn).setOnClickListener{ goToAddPlaceActivity(this) }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -124,27 +98,6 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         _adapter.notifyDataSetChanged()
     }
 
-    private fun addTask() {
-        //Declare and Initialise the Task
-        val place = Place.create()
-        //Set Task Description and isDone Status
-        place.placeName = etPlaceName.text.toString()
-        place.placeDesc = etPlaceDesc.text.toString()
-        place.isFav = false
-        //Get the object id for the new task from the Firebase Database
-        val newTask = _db.child(PlaceStatics.FIREBASE_TASK).push()
-        place.objectId = newTask.key
-        //Set the values for new task in the firebase using the footer form
-        newTask.setValue(place)
-        //Hide the footer and show the floating button
-//        toggleFooter()
-//        closeKeyboard(txtNewTaskDesc)
-        //Reset the new task description field for reuse.
-        etPlaceName.setText("")
-        etPlaceDesc.setText("")
-        Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
-    }
-
     override fun onFavClick(objectId: String, isFav: Boolean) {
         _db.child(PlaceStatics.FIREBASE_TASK).child(objectId).child("isFav").setValue(isFav).addOnCompleteListener{
             Toast.makeText(this, "Update successfully", Toast.LENGTH_SHORT).show()
@@ -161,17 +114,13 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        PostTemplate.setPlaceName(this, etPlaceName.text.toString())
-        PostTemplate.setPlaceDesc(this, etPlaceDesc.text.toString())
+    override fun onRestart() {
+        super.onRestart()
         goToBiometricActivity(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-        etPlaceName.setText(PostTemplate.getPlaceName(this))
-        etPlaceDesc.setText(PostTemplate.getPlaceDesc(this))
+    override fun onStart() {
+        super.onStart()
     }
 
 //    private fun toggleFooter(){

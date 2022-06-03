@@ -12,5 +12,8 @@ class Place {
     var objectId: String? = null
     var placeName: String? = null
     var placeDesc: String? = null
+    var placeLatitude: String? = null
+    var placeLongitude: String? = null
+    var placeAddress: String? = null
     var isFav: Boolean? = false
 }

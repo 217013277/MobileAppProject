@@ -2,11 +2,12 @@ package com.example.mobileappproject.extensions
 
 import android.content.Context
 import android.content.Intent
-import com.example.mobileappproject.BiometricActivity
-import com.example.mobileappproject.LoginActivity
+import com.example.mobileappproject.*
 
-import com.example.mobileappproject.MainActivity
-import com.example.mobileappproject.RegisterActivity
+fun goToAddPlaceActivity(context: Context){
+    val intent = Intent(context, AddPlaceActivity::class.java)
+    context.startActivity(intent)
+}
 
 fun goToMainActivity(context: Context){
     val intent = Intent(context, MainActivity::class.java)

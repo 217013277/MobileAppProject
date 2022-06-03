@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.example.mobileappproject.extensions.biometricAuth
+import com.example.mobileappproject.extensions.goToBiometricActivity
 import com.example.mobileappproject.extensions.goToLoginActivity
 import com.example.mobileappproject.extensions.goToMainActivity
 import java.util.concurrent.Executor
@@ -33,5 +34,10 @@ class BiometricActivity : AppCompatActivity() {
             goToMainActivity(this)
         }
         biometricAuth(this, this, onSucceeded)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        openBiometricAuth()
     }
 }
