@@ -1,9 +1,11 @@
 package com.example.mobileappproject
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
@@ -16,15 +18,18 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 
 class AddPlaceActivity : AppCompatActivity() {
 
     private lateinit var latitude: TextView
     private lateinit var longitude: TextView
 
+    // member variables that hold location info
     private lateinit var mLocationProviderClient: FusedLocationProviderClient
     private var mLastLocation: Location? = null
     private var mLocationRequest: LocationRequest? = null
+    private var mGeocoder: Geocoder? = null
 
     var mLocationCallBack: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
@@ -40,13 +45,8 @@ class AddPlaceActivity : AppCompatActivity() {
 
         mLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-        latitude = findViewById<TextView>(R.id.latitudeValue)
-        longitude = findViewById<TextView>(R.id.longitudeValue)
-
-        findViewById<Button>(R.id.getLocationBtn).setOnClickListener {
-            Toast.makeText(this, "Location Button clicked", Toast.LENGTH_LONG).show()
-            getCurrentLocation()
-        }
+        latitude = findViewById(R.id.latitudeValue)
+        longitude = findViewById(R.id.longitudeValue)
 
         // LocationRequest sets how often etc the app receives location updates
         mLocationRequest = LocationRequest
@@ -54,10 +54,18 @@ class AddPlaceActivity : AppCompatActivity() {
             .setInterval(10)
             .setFastestInterval(5)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+
+        getCurrentLocation()
+
+        findViewById<Button>(R.id.getLocationBtn).setOnClickListener {
+            Toast.makeText(this, "Start to get location, please wait", Toast.LENGTH_LONG).show()
+            getCurrentLocation()
+        }
+        findViewById<Button>(R.id.getAddressBtn).setOnClickListener { getAddress() }
     }
 
     private fun getCurrentLocation() {
-        if (checkPermissions()) {
+        if (isPermissionsGranted()) {
             if (isLocationEnabled()) {
                 //all permissions checked, get location code here
                 if (ActivityCompat.checkSelfPermission(
@@ -84,12 +92,23 @@ class AddPlaceActivity : AppCompatActivity() {
         }
     }
 
+    private fun stopLocation() {
+        val removeTask = mLocationProviderClient.removeLocationUpdates(mLocationCallBack)
+        removeTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "Location Callback removed.")
+            } else {
+                Log.d(TAG, "Failed to remove Location Callback.")
+            }
+        }
+    }
+
     companion object{
         private const val PERMISSION_REQUEST_ACCESS_LOCATION = 100
     }
 
-    private fun checkPermissions(): Boolean {
-        Log.d("LocationButton", "checkPermissions")
+    private fun isPermissionsGranted(): Boolean {
+        Log.d("LocationService", "checkPermissions")
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
@@ -115,6 +134,15 @@ class AddPlaceActivity : AppCompatActivity() {
         )
     }
 
+    private fun isLocationEnabled(): Boolean {
+        Log.d("LocationButton", "Check isLocationEnabled")
+        val locationManager: LocationManager =
+            getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -131,12 +159,37 @@ class AddPlaceActivity : AppCompatActivity() {
         }
     }
 
-    private fun isLocationEnabled(): Boolean {
-        Log.d("LocationButton", "Check isLocationEnabled")
-        val locationManager: LocationManager =
-            getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
+    private fun getAddress() {
+        val tvAddress = findViewById<TextView>(R.id.addressValue)
+
+        mGeocoder = Geocoder(this)
+        try {
+            // Only 1 address is needed here.
+            val addresses = mGeocoder!!.getFromLocation(
+                mLastLocation!!.latitude, mLastLocation!!.longitude, 1
+            )
+            if (addresses.size == 1) {
+                val address = addresses[0]
+                val addressLines = StringBuilder()
+                //see herehttps://stackoverflow
+                // .com/questions/44983507/android-getmaxaddresslineindex-returns-0-for-line-1
+                if (address.maxAddressLineIndex > 0) {
+                    for (i in 0 until address.maxAddressLineIndex) {
+                        addressLines.append(
+                            """
+                    ${address.getAddressLine(i)}
+                    """.trimIndent()
+                        )
+                    }
+                } else {
+                    addressLines.append(address.getAddressLine(0))
+                }
+                tvAddress!!.text = addressLines.toString()
+            } else {
+                tvAddress!!.text = "WARNING! Geocoder returned more than 1 addresses!"
+            }
+            stopLocation()
+        } catch (e: Exception) {
+        }
     }
 }

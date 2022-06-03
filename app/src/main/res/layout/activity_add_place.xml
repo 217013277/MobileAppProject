@@ -10,6 +10,8 @@
         android:id="@+id/etPlaceName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:autofillHints="off"
         android:hint="Place name"
         android:inputType="none"
@@ -24,24 +26,29 @@
         android:id="@+id/etPlaceDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_toStartOf="@+id/btnAdd"
         android:autofillHints="off"
         android:hint="Description"
         android:inputType="none"
         android:paddingStart="8sp"
         android:paddingEnd="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etPlaceName" />
 
     <TextView
         android:id="@+id/LatitudeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_toStartOf="@+id/btnAdd"
         android:paddingStart="8sp"
         android:text="Latitude: "
         android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etPlaceDesc" />
 
     <TextView
@@ -60,11 +67,12 @@
         android:id="@+id/LongitudeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_toStartOf="@+id/btnAdd"
         android:paddingStart="8sp"
-        android:text="Longitude"
+        android:text="Longitude: "
         android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LatitudeTitle" />
 
     <TextView
@@ -79,6 +87,39 @@
         app:layout_constraintStart_toEndOf="@+id/LongitudeTitle"
         app:layout_constraintTop_toTopOf="@+id/LongitudeTitle" />
 
+    <TextView
+        android:id="@+id/addressValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@+id/btnAdd"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LongitudeTitle" />
+
+    <Button
+        android:id="@+id/getLocationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Get Location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addressValue" />
+
+    <Button
+        android:id="@+id/getAddressBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Get Address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addressValue" />
+
     <Button
         android:id="@+id/btnAdd"
         android:layout_width="match_parent"
@@ -92,14 +133,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_menu_save" />
 
-    <Button
-        android:id="@+id/getLocationBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Get Location"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LongitudeTitle" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

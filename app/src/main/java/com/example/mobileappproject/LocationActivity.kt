@@ -128,7 +128,6 @@ class LocationActivity : AppCompatActivity() {
     }
 
     fun onLocateClicked(V:View?) {
-
         mGeocoder = Geocoder(this)
         try {
             // Only 1 address is needed here.
@@ -145,7 +144,6 @@ class LocationActivity : AppCompatActivity() {
                         addressLines.append(
                             """
                     ${address.getAddressLine(i)}
-
                     """.trimIndent()
                         )
                     }
