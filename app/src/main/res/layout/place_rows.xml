@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@android:color/darker_gray"
-                android:contentDescription="TODO"
+                android:contentDescription="Place Image"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Description of this place"
+                android:text="Place Description"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -80,7 +80,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="Favourite" />
+                android:contentDescription="is it Favourite?" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -103,7 +103,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="@android:color/transparent"
                 app:srcCompat="@android:drawable/ic_menu_delete"
-                android:contentDescription="Remove" />
+                android:contentDescription="Remove this checkpoint" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

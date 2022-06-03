@@ -1,6 +1,7 @@
 package com.example.mobileappproject
 
 import android.annotation.SuppressLint
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,9 +16,14 @@ import com.example.mobileappproject.lists.PlaceAdapter
 import com.example.mobileappproject.lists.PlaceRowListener
 import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import java.text.DateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity(), PlaceRowListener {
 
@@ -27,8 +33,14 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
     lateinit var _db: DatabaseReference
     var _placeList: MutableList<Place>? = null
-//    lateinit var _adapter: TaskAdapter
     lateinit var _adapter: PlaceAdapter
+
+    private var mLastLocation: Location? = null
+    var mLocationCallBack: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            mLastLocation = result.lastLocation
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

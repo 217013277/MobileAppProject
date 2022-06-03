@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddPlaceActivity">
+
+    <EditText
+        android:id="@+id/etPlaceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="off"
+        android:hint="Place name"
+        android:inputType="none"
+        android:paddingStart="8sp"
+        android:paddingEnd="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etPlaceDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnAdd"
+        android:autofillHints="off"
+        android:hint="Description"
+        android:inputType="none"
+        android:paddingStart="8sp"
+        android:paddingEnd="8sp"
+        app:layout_constraintTop_toBottomOf="@+id/etPlaceName" />
+
+    <TextView
+        android:id="@+id/LatitudeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnAdd"
+        android:paddingStart="8sp"
+        android:text="Latitude: "
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/etPlaceDesc" />
+
+    <TextView
+        android:id="@+id/latitudeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnAdd"
+        android:text="Latitude value"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/LatitudeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/LatitudeTitle"
+        app:layout_constraintTop_toTopOf="@+id/LatitudeTitle" />
+
+    <TextView
+        android:id="@+id/LongitudeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnAdd"
+        android:paddingStart="8sp"
+        android:text="Longitude"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/LatitudeTitle" />
+
+    <TextView
+        android:id="@+id/longitudeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnAdd"
+        android:text="Longitude value"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/LongitudeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/LongitudeTitle"
+        app:layout_constraintTop_toTopOf="@+id/LongitudeTitle" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="Submit"
+        android:contentDescription="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_save" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
