@@ -63,29 +63,28 @@ class LocationActivity : AppCompatActivity() {
         mOutput?.text = ""
 
         val locationPermissionRequest = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-            ActivityResultCallback<Map<String?, Boolean?>> { result: Map<String?, Boolean?> ->
-                val fineLocationGranted = result.getOrDefault(
-                    Manifest.permission.ACCESS_FINE_LOCATION, false
-                )
-                val coarseLocationGranted = result.getOrDefault(
-                    Manifest.permission.ACCESS_COARSE_LOCATION, false
-                )
-                if (fineLocationGranted != null && fineLocationGranted) {
-                    // Precise location access granted.
-                    // permissionOk = true;
-                    mTimeText!!.text = "permission granted"
-                } else if (coarseLocationGranted != null && coarseLocationGranted) {
-                    // Only approximate location access granted.
-                    // permissionOk = true;
-                    mTimeText!!.text = "permission granted"
-                } else {
-                    // permissionOk = false;
-                    // No location access granted.
-                    mTimeText!!.text = "permission not granted"
-                }
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { result: Map<String?, Boolean?> ->
+            val fineLocationGranted = result.getOrDefault(
+                Manifest.permission.ACCESS_FINE_LOCATION, false
+            )
+            val coarseLocationGranted = result.getOrDefault(
+                Manifest.permission.ACCESS_COARSE_LOCATION, false
+            )
+            if (fineLocationGranted != null && fineLocationGranted) {
+                // Precise location access granted.
+                // permissionOk = true;
+                mTimeText!!.text = "permission granted"
+            } else if (coarseLocationGranted != null && coarseLocationGranted) {
+                // Only approximate location access granted.
+                // permissionOk = true;
+                mTimeText!!.text = "permission granted"
+            } else {
+                // permissionOk = false;
+                // No location access granted.
+                mTimeText!!.text = "permission not granted"
             }
-        )
+        }
 
         locationPermissionRequest.launch(
             arrayOf(
