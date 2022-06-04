@@ -24,11 +24,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LocationActivity"
-            android:exported="true">
-
-        </activity>
-        <activity
             android:name=".BiometricActivity"
             android:exported="true">
 
