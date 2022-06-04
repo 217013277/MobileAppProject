@@ -10,6 +10,7 @@ object PostTemplate {
     private const val LATITUDE= "latitude"
     private const val LONGITUDE= "longitude"
     private const val ADDRESS= "address"
+    private const val WEATHER= "weather"
 
     private  fun getSharedPreference(ctx: Context): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -80,4 +81,16 @@ object PostTemplate {
     fun getAddress(context: Context) = getSharedPreference(
         context
     )?.getString(ADDRESS,"")
+
+    fun setWeather(context: Context, weather:String){
+        editor(
+            context,
+            WEATHER,
+            weather
+        )
+    }
+
+    fun getWeather(context: Context) = getSharedPreference(
+        context
+    )?.getString(WEATHER,"")
 }

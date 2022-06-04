@@ -15,5 +15,6 @@ class Place {
     var placeLatitude: String? = null
     var placeLongitude: String? = null
     var placeAddress: String? = null
+    var placeWeather: String? = null
     var isFav: Boolean? = false
 }

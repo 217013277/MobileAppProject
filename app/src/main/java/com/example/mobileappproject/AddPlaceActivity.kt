@@ -3,12 +3,9 @@ package com.example.mobileappproject
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -17,13 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
-import android.provider.Settings
 import android.util.Log
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.mobileappproject.extensions.goToBiometricActivity
@@ -33,7 +27,6 @@ import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DateFormat
 import java.util.*
@@ -85,13 +78,24 @@ class AddPlaceActivity : AppCompatActivity() {
             getCurrentLocation()
         }
         findViewById<Button>(R.id.getAddressBtn).setOnClickListener { getAddress() }
-        findViewById<Button>(R.id.getWeatherBtn).setOnClickListener { tvWeather() }
+        findViewById<Button>(R.id.getWeatherBtn).setOnClickListener { getWeather() }
         findViewById<Button>(R.id.submitBtn).setOnClickListener { addPlace() }
         findViewById<Button>(R.id.goToMainBtn).setOnClickListener {
             goToMainActivity(this)
             finish()
         }
 
+        checkAndGetLocationPermission()
+
+        // LocationRequest sets how often etc the app receives location updates
+        mLocationRequest = LocationRequest
+            .create()
+            .setInterval(10)
+            .setFastestInterval(5)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+    }
+
+    private fun checkAndGetLocationPermission() {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { result: Map<String?, Boolean?> ->
@@ -122,13 +126,6 @@ class AddPlaceActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
-
-        // LocationRequest sets how often etc the app receives location updates
-        mLocationRequest = LocationRequest
-            .create()
-            .setInterval(10)
-            .setFastestInterval(5)
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
     }
 
     private fun addPlace() {
@@ -140,6 +137,7 @@ class AddPlaceActivity : AppCompatActivity() {
         place.placeLatitude = tvLatitude.text.toString()
         place.placeLongitude = tvLongitude.text.toString()
         place.placeAddress = tvAddress.text.toString()
+        place.placeWeather = tvWeather.text.toString()
         place.isFav = false
         //Get the object id for the new task from the Firebase Database
         val newTask = _db.child(PlaceStatics.FIREBASE_TASK).push()
@@ -151,6 +149,7 @@ class AddPlaceActivity : AppCompatActivity() {
             tvLatitude.text = ""
             tvLongitude.text = ""
             tvAddress.text = ""
+            tvWeather.text = ""
             Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
             goToMainActivity(this)
         }.addOnFailureListener {
@@ -177,6 +176,7 @@ class AddPlaceActivity : AppCompatActivity() {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            //request enable location
             return
         }
         mLocationProvider!!.requestLocationUpdates(
@@ -185,36 +185,36 @@ class AddPlaceActivity : AppCompatActivity() {
         )
     }
 
-    private fun stopLocation() {
-        val removeTask = mLocationProvider?.removeLocationUpdates(mLocationCallBack)
-        removeTask?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "Location Callback removed.")
-            } else {
-                Log.d(TAG, "Failed to remove Location Callback.")
-            }
-        }
-    }
+//    private fun stopLocation() {
+//        val removeTask = mLocationProvider?.removeLocationUpdates(mLocationCallBack)
+//        removeTask?.addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                Log.d(TAG, "Location Callback removed.")
+//            } else {
+//                Log.d(TAG, "Failed to remove Location Callback.")
+//            }
+//        }
+//    }
 
     companion object{
         private const val PERMISSION_REQUEST_ACCESS_LOCATION = 100
     }
 
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        if (requestCode == PERMISSION_REQUEST_ACCESS_LOCATION) {
-//            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-//                Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
-//                getCurrentLocation()
-//            } else {
-//                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_ACCESS_LOCATION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
+                getCurrentLocation()
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private fun getAddress() {
@@ -250,7 +250,7 @@ class AddPlaceActivity : AppCompatActivity() {
         }
     }
 
-    private fun tvWeather() {
+    private fun getWeather() {
         val queue = Volley.newRequestQueue(this)
         val url = "https://api.openweathermap.org/data/2.5/weather?lat=${tvLatitude.text}&lon=${tvLongitude.text}&appid=${getString(R.string.open_weather_api_key)}"
 
