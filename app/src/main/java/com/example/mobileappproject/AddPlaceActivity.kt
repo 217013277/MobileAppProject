@@ -224,7 +224,6 @@ class AddPlaceActivity : AppCompatActivity() {
             val addresses = mGeocoder!!.getFromLocation(
                 mLastLocation!!.latitude, mLastLocation!!.longitude, 1
             )
-            Log.d("getAddress", addresses.toString())
             if (addresses.size == 1) {
                 val address = addresses[0]
                 val addressLines = StringBuilder()
@@ -241,7 +240,6 @@ class AddPlaceActivity : AppCompatActivity() {
                 } else {
                     addressLines.append(address.getAddressLine(0))
                 }
-                Log.d("getAddress", "123123123123")
                 tvAddress.text = addressLines.toString()
             } else {
                 tvAddress.text = "WARNING! Geocoder returned more than 1 addresses!"
