@@ -250,22 +250,22 @@ class AddPlaceActivity : AppCompatActivity() {
 
     private fun getWeather() {
         val queue = Volley.newRequestQueue(this)
-        val url = "https://api.openweathermap.org/data/2.5/weather?lat=${tvLatitude.text}&lon=${tvLongitude.text}&appid=${getString(R.string.open_weather_api_key)}"
+
+        val lat = tvLatitude.text
+        val lon = tvLongitude.text
+        val key = getString(R.string.open_weather_api_key)
+        val url = "https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}"
 
         val weatherRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
                 Log.d("Weather", "Response: $response")
                 val weatherObject = JSONObject(response).getJSONArray("weather")[0]
-                Log.d("Weather", weatherObject.toString())
                 val weather = JSONObject(weatherObject.toString()).getString("main")
-                Log.d("Weather", weather.toString())
                 tvWeather.text = weather.toString()
-            },
-            { error ->
+            }, { error ->
                 Log.d("Weather", "error: $error")
             })
-
         queue.add(weatherRequest)
     }
 
@@ -292,7 +292,6 @@ class AddPlaceActivity : AppCompatActivity() {
         tvLatitude.text = PostTemplate.getLatitude(this).toString()
         tvLongitude.text = PostTemplate.getLongitude(this).toString()
         tvAddress.text = PostTemplate.getAddress(this).toString()
-
 
         if (tvLatitude.text == "" || tvLongitude.text == "") {
             getCurrentLocation()
