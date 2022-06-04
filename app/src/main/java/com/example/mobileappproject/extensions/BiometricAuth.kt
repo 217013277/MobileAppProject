@@ -50,5 +50,5 @@ fun biometricAuth (fragmentActivity: FragmentActivity,
 val promptInfo = BiometricPrompt.PromptInfo.Builder()
     .setTitle("Biometric login for my app")
     .setSubtitle("Log in using your biometric credential")
-    .setNegativeButtonText("Use account password")
+    .setNegativeButtonText("Cancel")
     .build()

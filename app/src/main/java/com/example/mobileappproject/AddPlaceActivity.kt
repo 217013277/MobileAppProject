@@ -79,7 +79,10 @@ class AddPlaceActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.getAddressBtn).setOnClickListener { getAddress() }
         findViewById<Button>(R.id.submitBtn).setOnClickListener { addPlace() }
-        findViewById<Button>(R.id.goToMainBtn).setOnClickListener { goToMainActivity(this) }
+        findViewById<Button>(R.id.goToMainBtn).setOnClickListener {
+            goToMainActivity(this)
+            finish()
+        }
     }
 
     private fun addPlace() {

@@ -13,7 +13,6 @@ import com.example.mobileappproject.R
 
 class PlaceAdapter(private val context: Context, private val placeList: MutableList<Place>) :
     RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
-    private val _inflater: LayoutInflater = LayoutInflater.from(context)
     private var _placeList = placeList
     private var _rowListener: PlaceRowListener = context as PlaceRowListener
 
@@ -33,11 +32,13 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val name: String = _placeList[position].placeName.toString()
         val desc: String = _placeList[position].placeDesc.toString()
+        val address: String = _placeList[position].placeAddress.toString()
         val isFav: Boolean = _placeList[position].isFav.toString().toBoolean()
         val objectId: String = _placeList[position].objectId.toString()
 
         holder.name.text = name
         holder.desc.text = desc
+        holder.address.text = address
         holder.isFav.isChecked = isFav
         holder.isFav.setOnClickListener{ _rowListener.onFavClick(objectId, !isFav) }
         holder.removeBtn.setOnClickListener{ _rowListener.onPlaceDelete(objectId, name) }
@@ -50,6 +51,7 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
     class ViewHolder(ItemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(ItemView) {
         val name: TextView = itemView.findViewById(R.id.tvPlaceName) as TextView
         val desc: TextView = itemView.findViewById(R.id.tvPlaceDesc) as TextView
+        val address: TextView = itemView.findViewById(R.id.tvAddress) as TextView
         val isFav: CheckBox = itemView.findViewById(R.id.imgPlaceFav) as CheckBox
         val removeBtn: ImageButton = itemView.findViewById(R.id.btnRemove) as ImageButton
 

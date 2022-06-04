@@ -26,18 +26,22 @@ class BiometricActivity : AppCompatActivity() {
         val backToLoginBtn = findViewById<TextView>(R.id.backToLoginBtn)
 
         biometricLoginButton.setOnClickListener { openBiometricAuth() }
-        backToLoginBtn.setOnClickListener { goToLoginActivity(this) }
+        backToLoginBtn.setOnClickListener {
+            finish()
+            goToLoginActivity(this)
+        }
     }
 
     private fun openBiometricAuth() {
         val onSucceeded = Runnable {
             goToMainActivity(this)
+            finish()
         }
         biometricAuth(this, this, onSucceeded)
     }
 
-    override fun onRestart() {
-        super.onRestart()
+    override fun onResume() {
+        super.onResume()
         openBiometricAuth()
     }
 }

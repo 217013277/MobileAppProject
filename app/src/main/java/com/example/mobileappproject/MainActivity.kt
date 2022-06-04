@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        getWindow().setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE);
+
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
         _placeList = mutableListOf()
 //        _adapter = TaskAdapter(this, _taskList!!)
@@ -46,7 +51,6 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
         val email = findViewById<TextView>(R.id.email)
         val accountBtn = findViewById<Button>(R.id.AccountBtn)
-
         val user = Firebase.auth.currentUser
         if (user != null) {
             email.text = user.email
@@ -90,6 +94,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
                 place.objectId = currentItem.key
                 place.placeName = map["placeName"] as String?
                 place.placeDesc = map["placeDesc"] as String?
+                place.placeAddress = map["placeAddress"] as String?
                 place.isFav = map["isFav"] as Boolean?
                 _placeList!!.add(place)
             }
@@ -119,9 +124,6 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         goToBiometricActivity(this)
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
 
 //    private fun toggleFooter(){
 //        if (footer.visibility == View.GONE) {
