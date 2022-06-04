@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappproject.extensions.goToAddPlaceActivity
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.sleep(2000)
+        val splashScreen = installSplashScreen()
         setContentView(R.layout.activity_main)
 
         getWindow().setFlags(
