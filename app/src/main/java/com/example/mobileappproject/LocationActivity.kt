@@ -1,12 +1,14 @@
 package com.example.mobileappproject
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -137,7 +139,7 @@ class LocationActivity : AppCompatActivity() {
             if (addresses.size == 1) {
                 val address = addresses[0]
                 val addressLines = StringBuilder()
-                //see herehttps://stackoverflow
+                //see here https://stackoverflow
                 // .com/questions/44983507/android-getmaxaddresslineindex-returns-0-for-line-1
                 if (address.maxAddressLineIndex > 0) {
                     for (i in 0 until address.maxAddressLineIndex) {

@@ -7,6 +7,9 @@ import androidx.preference.PreferenceManager
 object PostTemplate {
     private const val NAME= "name"
     private const val DESC= "desc"
+    private const val LATITUDE= "latitude"
+    private const val LONGITUDE= "longitude"
+    private const val ADDRESS= "address"
 
     private  fun getSharedPreference(ctx: Context): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -41,4 +44,40 @@ object PostTemplate {
     fun getPlaceName(context: Context) = getSharedPreference(
         context
     )?.getString(NAME,"")
+
+    fun setLatitude(context: Context, latitude:String){
+        editor(
+            context,
+            LATITUDE,
+            latitude
+        )
+    }
+
+    fun getLatitude(context: Context) = getSharedPreference(
+        context
+    )?.getString(LATITUDE,"")
+
+    fun setLongitude(context: Context, longitude:String){
+        editor(
+            context,
+            LONGITUDE,
+            longitude
+        )
+    }
+
+    fun getLongitude(context: Context) = getSharedPreference(
+        context
+    )?.getString(LONGITUDE,"")
+
+    fun setAddress(context: Context, address:String){
+        editor(
+            context,
+            ADDRESS,
+            address
+        )
+    }
+
+    fun getAddress(context: Context) = getSharedPreference(
+        context
+    )?.getString(ADDRESS,"")
 }

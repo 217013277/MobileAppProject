@@ -16,6 +16,7 @@
         android:autofillHints="off"
         android:hint="Place name"
         android:inputType="none"
+        android:minHeight="48dp"
         android:paddingStart="8sp"
         android:paddingEnd="8sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +33,7 @@
         android:autofillHints="off"
         android:hint="Description"
         android:inputType="none"
+        android:minHeight="48dp"
         android:paddingStart="8sp"
         android:paddingEnd="8sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,6 +44,7 @@
         android:id="@+id/LatitudeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:paddingStart="8sp"
         android:text="Latitude: "
@@ -82,12 +85,14 @@
         app:layout_constraintTop_toTopOf="@+id/LongitudeTitle" />
 
     <TextView
-        android:id="@+id/addressValue"
+        android:id="@+id/tvTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:paddingStart="8sp"
+        android:text="time"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,18 +105,56 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Get Location"
+        android:textColor="#4E342E"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addressValue" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+
+    <TextView
+        android:id="@+id/addressValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Address"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/getAddressBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/getAddressBtn"
+        app:layout_constraintTop_toBottomOf="@+id/getLocationBtn" />
 
     <Button
         android:id="@+id/getAddressBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
         android:text="Get Address"
+        android:textColor="#4E342E"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getLocationBtn" />
+
+    <TextView
+        android:id="@+id/tvWeather"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="weather"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/getWeatherBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addressValue" />
+        app:layout_constraintStart_toEndOf="@+id/getWeatherBtn"
+        app:layout_constraintTop_toTopOf="@+id/getWeatherBtn" />
+
+    <Button
+        android:id="@+id/getWeatherBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Get Weather"
+        android:textColor="#4E342E"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getAddressBtn" />
 
     <Button
         android:id="@+id/submitBtn"
@@ -119,8 +162,9 @@
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="Check-in"
         android:contentDescription="Check-in"
+        android:text="Check-in"
+        android:textColor="#4E342E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -129,7 +173,7 @@
     <Button
         android:id="@+id/goToMainBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="8dp"
@@ -141,6 +185,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_menu_save" />
 
+    <TextView
+        android:id="@+id/tvPermission"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Permission"
+        app:layout_constraintBottom_toBottomOf="@+id/getLocationBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/getLocationBtn"
+        app:layout_constraintTop_toTopOf="@+id/getLocationBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
