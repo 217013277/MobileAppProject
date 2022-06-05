@@ -6,7 +6,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -27,7 +26,7 @@ class uploadImageActivity : AppCompatActivity() {
     private lateinit var btn_choose_image: Button
     private lateinit var btn_upload_image: Button
 
-    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var pickImageActivityLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +48,11 @@ class uploadImageActivity : AppCompatActivity() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        pickImageLauncher.launch(intent)
+        pickImageActivityLauncher.launch(intent)
     }
 
     private fun setupPickImageLauncher() {
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        pickImageActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
                 if (it.data != null) {
                     filePath = it.data!!.data

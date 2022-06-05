@@ -18,30 +18,29 @@
             android:id="@+id/mainImage"
             android:layout_width="260dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/darker_gray"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
-            android:background="@android:color/darker_gray"/>
+            app:srcCompat="@drawable/ic_baseline_photo_camera_24" />
 
         <EditText
             android:id="@+id/etPlaceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:autofillHints="off"
             android:hint="Place name"
             android:inputType="none"
             android:minHeight="48dp"
-            android:paddingStart="8sp"
-            android:paddingEnd="8sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainImage" />
+            app:layout_constraintTop_toBottomOf="@+id/btnImagePicker" />
 
         <EditText
             android:id="@+id/etPlaceDesc"
@@ -117,11 +116,10 @@
         <Button
             android:id="@+id/getLocationBtn"
             android:layout_width="110dp"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="Get Location"
-            android:textColor="#4E342E"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTime" />
 
@@ -140,10 +138,9 @@
         <Button
             android:id="@+id/getAddressBtn"
             android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_height="70dp"
             android:layout_marginStart="16dp"
             android:text="Get Address"
-            android:textColor="#4E342E"
             app:layout_constraintEnd_toEndOf="@+id/getLocationBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/getLocationBtn" />
@@ -168,7 +165,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="Get Weather"
-            android:textColor="#4E342E"
             app:layout_constraintEnd_toEndOf="@+id/getLocationBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/getAddressBtn" />
@@ -186,6 +182,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/getLocationBtn"
             app:layout_constraintTop_toBottomOf="@+id/locationLayout" />
+
+        <Button
+            android:id="@+id/btnImagePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Choose from Gallery"
+            app:layout_constraintEnd_toEndOf="@+id/mainImage"
+            app:layout_constraintStart_toStartOf="@+id/mainImage"
+            app:layout_constraintTop_toBottomOf="@+id/mainImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

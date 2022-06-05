@@ -6,8 +6,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -28,7 +30,10 @@ import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import org.json.JSONObject
+import java.io.IOException
 import java.text.DateFormat
 import java.util.*
 
@@ -43,10 +48,16 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var tvPermission: TextView
     private lateinit var tvWeather: TextView
     private lateinit var ivMainImage: ImageView
+    private lateinit var btnImagePicker: Button
 
     private lateinit var _db: DatabaseReference
 
-    private lateinit var cameraResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var cameraActivityLauncher: ActivityResultLauncher<Intent>
+
+    private lateinit var pickImageActivityLauncher: ActivityResultLauncher<Intent>
+    private var filePath: Uri? = null
+    //Firebase storage for upload image
+    private var storageReference: StorageReference? = null
 
     // member variables that hold location info
     private var mLastLocation: Location? = null
@@ -75,6 +86,7 @@ class AddPlaceActivity : AppCompatActivity() {
         tvPermission = findViewById(R.id.tvPermission)
         tvWeather = findViewById(R.id.tvWeather)
         ivMainImage = findViewById(R.id.mainImage)
+        btnImagePicker = findViewById<Button>(R.id.btnImagePicker)
 
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
 
@@ -90,7 +102,10 @@ class AddPlaceActivity : AppCompatActivity() {
             finish()
         }
 
-        setupCameraLauncher()
+        setupPickImageActivityLauncher()
+        btnImagePicker.setOnClickListener { launchGallery() }
+
+        setupCameraActivityLauncher()
         ivMainImage.setOnClickListener { checkCameraPermissionAndRunOpenCamera() }
 
         checkAndGetLocationPermission()
@@ -102,8 +117,31 @@ class AddPlaceActivity : AppCompatActivity() {
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
     }
 
-    private fun setupCameraLauncher() {
-        cameraResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    companion object{
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 100
+        private const val CAMERA_PERMISSION_CODE = 1
+        private const val CAMERA_REQUEST_CODE = 2
+    }
+
+    private fun setupPickImageActivityLauncher() {
+        pickImageActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
+                if (it.data != null) {
+                    filePath = it.data!!.data
+                    try {
+                        val source = ImageDecoder.createSource(contentResolver, filePath as Uri)
+                        val bitmap = ImageDecoder.decodeBitmap(source)
+                        ivMainImage.setImageBitmap(bitmap)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupCameraActivityLauncher() {
+        cameraActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
                 val myData: Intent? = it.data
                 if (myData != null) {
@@ -113,6 +151,13 @@ class AddPlaceActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun launchGallery() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        pickImageActivityLauncher.launch(intent)
     }
 
     private fun checkCameraPermissionAndRunOpenCamera() {
@@ -129,7 +174,7 @@ class AddPlaceActivity : AppCompatActivity() {
 
     private fun openCamera(){
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraResultLauncher.launch(intent)
+        cameraActivityLauncher.launch(intent)
     }
 
     private fun checkAndGetLocationPermission() {
@@ -177,10 +222,11 @@ class AddPlaceActivity : AppCompatActivity() {
         place.placeWeather = tvWeather.text.toString()
         place.isFav = false
         //Get the object id for the new task from the Firebase Database
-        val newTask = _db.child(PlaceStatics.FIREBASE_TASK).push()
-        place.objectId = newTask.key
+        val newPlace = _db.child(PlaceStatics.FIREBASE_TASK).push()
+        place.objectId = newPlace.key
         //Set the values for new task in the firebase using the footer form
-        newTask.setValue(place).addOnSuccessListener {
+        uploadImage(place.objectId.toString())
+        newPlace.setValue(place).addOnSuccessListener {
             etPlaceName.setText("")
             etPlaceDesc.setText("")
             tvLatitude.text = ""
@@ -192,7 +238,23 @@ class AddPlaceActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show()
         }
+
         //Reset the new task description field for reuse.
+    }
+
+    private fun uploadImage(id: String){
+        storageReference = FirebaseStorage.getInstance().reference
+        if(filePath != null){
+            val ref = storageReference?.child("placeImages/" + id)
+            val uploadTask = ref?.putFile(filePath!!)
+            if(uploadTask != null){
+                Toast.makeText(this,"Upload Image Successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this,"Fail to upload Image", Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun getCurrentLocation() {
@@ -233,12 +295,6 @@ class AddPlaceActivity : AppCompatActivity() {
 //        }
 //    }
 
-    companion object{
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 100
-        private const val CAMERA_PERMISSION_CODE = 1
-        private const val CAMERA_REQUEST_CODE = 2
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -268,9 +324,10 @@ class AddPlaceActivity : AppCompatActivity() {
     private fun getAddress() {
         mGeocoder = Geocoder(this)
         try {
+            val lat = tvLatitude.text.toString().toDouble()
             // Only 1 address is needed here.
             val addresses = mGeocoder!!.getFromLocation(
-                mLastLocation!!.latitude, mLastLocation!!.longitude, 1
+                tvLatitude.text.toString().toDouble(), tvLongitude.text.toString().toDouble(), 1
             )
             if (addresses.size == 1) {
                 val address = addresses[0]
