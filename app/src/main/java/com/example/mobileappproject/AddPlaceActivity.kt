@@ -28,6 +28,7 @@ import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -53,9 +54,9 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var _db: DatabaseReference
 
     private lateinit var cameraActivityLauncher: ActivityResultLauncher<Intent>
-
     private lateinit var pickImageActivityLauncher: ActivityResultLauncher<Intent>
     private var filePath: Uri? = null
+    private lateinit var uploadedImageUrl: String
     //Firebase storage for upload image
     private var storageReference: StorageReference? = null
 
@@ -126,15 +127,13 @@ class AddPlaceActivity : AppCompatActivity() {
     private fun setupPickImageActivityLauncher() {
         pickImageActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
-                if (it.data != null) {
-                    filePath = it.data!!.data
-                    try {
-                        val source = ImageDecoder.createSource(contentResolver, filePath as Uri)
-                        val bitmap = ImageDecoder.decodeBitmap(source)
-                        ivMainImage.setImageBitmap(bitmap)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                filePath = it.data!!.data
+                try {
+                    val source = ImageDecoder.createSource(contentResolver, filePath as Uri)
+                    val bitmap = ImageDecoder.decodeBitmap(source)
+                    ivMainImage.setImageBitmap(bitmap)
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -142,13 +141,12 @@ class AddPlaceActivity : AppCompatActivity() {
 
     private fun setupCameraActivityLauncher() {
         cameraActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
-                val myData: Intent? = it.data
-                if (myData != null) {
-                    Log.d("Camera launcher", "Camera data is not null")
-                    val thumbNail: Bitmap = myData.extras!!.get("data") as Bitmap
-                    ivMainImage.setImageBitmap(thumbNail)
-                }
+            if (it.resultCode == RESULT_OK && it.data !=null) {
+                filePath = it.data!!.data
+                Log.d("camera", it.data!!.data.toString())
+                Log.d("Camera launcher", "Camera data is not null")
+                val thumbNail: Bitmap = it.data?.extras!!.get("data") as Bitmap
+                ivMainImage.setImageBitmap(thumbNail)
             }
         }
     }
@@ -225,8 +223,13 @@ class AddPlaceActivity : AppCompatActivity() {
         val newPlace = _db.child(PlaceStatics.FIREBASE_TASK).push()
         place.objectId = newPlace.key
         //Set the values for new task in the firebase using the footer form
-        uploadImage(place.objectId.toString())
+        try {
+            uploadImage(place.objectId.toString())
+        } catch (e: Exception) {
+
+        }
         newPlace.setValue(place).addOnSuccessListener {
+            //Reset the new task description field for reuse.
             etPlaceName.setText("")
             etPlaceDesc.setText("")
             tvLatitude.text = ""
@@ -238,19 +241,22 @@ class AddPlaceActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show()
         }
-
-        //Reset the new task description field for reuse.
     }
 
-    private fun uploadImage(id: String){
+    private fun uploadImage(id: String) {
         storageReference = FirebaseStorage.getInstance().reference
         if(filePath != null){
             val ref = storageReference?.child("placeImages/" + id)
             val uploadTask = ref?.putFile(filePath!!)
-            if(uploadTask != null){
-                Toast.makeText(this,"Upload Image Successfully", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this,"Fail to upload Image", Toast.LENGTH_SHORT).show()
+            uploadTask!!.addOnSuccessListener {
+                if (it.metadata?.reference != null) {
+                    it.storage.downloadUrl.addOnSuccessListener {
+                        uploadedImageUrl = it.toString()
+                        Log.d("Upload Image", uploadedImageUrl)
+                    }
+                }
+            }.addOnFailureListener{
+                Log.e("Upload Image", it.toString())
             }
         }else{
             Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
