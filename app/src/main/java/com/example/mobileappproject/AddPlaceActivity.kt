@@ -16,13 +16,12 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import android.util.Log
 import android.widget.*
-import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.mobileappproject.extensions.goToBiometricActivity
 import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceStatics
@@ -46,6 +45,8 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var ivMainImage: ImageView
 
     private lateinit var _db: DatabaseReference
+
+    private lateinit var cameraResultLauncher: ActivityResultLauncher<Intent>
 
     // member variables that hold location info
     private var mLastLocation: Location? = null
@@ -88,18 +89,9 @@ class AddPlaceActivity : AppCompatActivity() {
             goToMainActivity(this)
             finish()
         }
-        ivMainImage.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.CAMERA),
-                    CAMERA_PERMISSION_CODE
-                )
-            }
-        }
+
+        setupCameraLauncher()
+        ivMainImage.setOnClickListener { checkCameraPermissionAndRunOpenCamera() }
 
         checkAndGetLocationPermission()
         // LocationRequest sets how often etc the app receives location updates
@@ -108,6 +100,36 @@ class AddPlaceActivity : AppCompatActivity() {
             .setInterval(10)
             .setFastestInterval(5)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+    }
+
+    private fun setupCameraLauncher() {
+        cameraResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
+                val myData: Intent? = it.data
+                if (myData != null) {
+                    Log.d("Camera launcher", "Camera data is not null")
+                    val thumbNail: Bitmap = myData.extras!!.get("data") as Bitmap
+                    ivMainImage.setImageBitmap(thumbNail)
+                }
+            }
+        }
+    }
+
+    private fun checkCameraPermissionAndRunOpenCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera()
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_CODE
+            )
+        }
+    }
+
+    private fun openCamera(){
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraResultLauncher.launch(intent)
     }
 
     private fun checkAndGetLocationPermission() {
@@ -223,6 +245,7 @@ class AddPlaceActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Check and ask location permission and run getCurrentLocation() if permission granted
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
@@ -231,27 +254,15 @@ class AddPlaceActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
             }
         }
-
+        // Check and ask Camera permission and run camera if permission granted
         if (requestCode == CAMERA_REQUEST_CODE) {
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+                openCamera()
             } else {
                 Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
             }
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK) {
-            if (requestCode == CAMERA_REQUEST_CODE) {
-                val thumbNail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                ivMainImage.setImageBitmap(thumbNail)
-            }
-        }
-    }
-
 
     @SuppressLint("SetTextI18n")
     private fun getAddress() {
@@ -305,11 +316,6 @@ class AddPlaceActivity : AppCompatActivity() {
             })
         queue.add(weatherRequest)
     }
-
-//    override fun onRestart() {
-//        super.onRestart()
-//        goToBiometricActivity(this)
-//    }
 
     override fun onPause() {
         super.onPause()
