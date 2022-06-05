@@ -54,7 +54,7 @@
     <Button
         android:id="@+id/goToAddPlaceBtn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Go to check-in"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
