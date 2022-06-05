@@ -2,6 +2,7 @@ package com.example.mobileappproject
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.IOException
@@ -24,6 +27,8 @@ class uploadImageActivity : AppCompatActivity() {
     private lateinit var btn_choose_image: Button
     private lateinit var btn_upload_image: Button
 
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload_image)
@@ -35,6 +40,7 @@ class uploadImageActivity : AppCompatActivity() {
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
 
+        setupPickImageLauncher()
         btn_choose_image.setOnClickListener { launchGallery() }
         btn_upload_image.setOnClickListener { uploadImage() }
     }
@@ -43,21 +49,22 @@ class uploadImageActivity : AppCompatActivity() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+        pickImageLauncher.launch(intent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            if(data == null || data.data == null){
-                return
-            }
-            filePath = data.data
-            try {
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
-                imagePreview.setImageBitmap(bitmap)
-            } catch (e: IOException) {
-                e.printStackTrace()
+    private fun setupPickImageLauncher() {
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK && it.data !=null) {
+                if (it.data != null) {
+                    filePath = it.data!!.data
+                    try {
+                        val source = ImageDecoder.createSource(contentResolver, filePath as Uri)
+                        val bitmap = ImageDecoder.decodeBitmap(source)
+                        imagePreview.setImageBitmap(bitmap)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
             }
         }
     }
