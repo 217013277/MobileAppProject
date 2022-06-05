@@ -15,15 +15,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="240dp"
+            android:id="@+id/mainImage"
+            android:layout_width="260dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+
+            android:background="@android:color/darker_gray"/>
 
         <EditText
             android:id="@+id/etPlaceName"
@@ -40,7 +41,7 @@
             android:paddingEnd="8sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/mainImage" />
 
         <EditText
             android:id="@+id/etPlaceDesc"
@@ -60,18 +61,18 @@
             app:layout_constraintTop_toBottomOf="@+id/etPlaceName" />
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/locationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:orientation="horizontal"
             android:paddingStart="8sp"
             android:paddingEnd="8sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPlaceDesc">
+            app:layout_constraintStart_toEndOf="@+id/getLocationBtn"
+            app:layout_constraintTop_toTopOf="@+id/getLocationBtn">
 
             <TextView
                 android:id="@+id/latitudeValue"
@@ -79,13 +80,13 @@
                 android:layout_height="wrap_content"
                 android:text="Latitude"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text=" , "
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/longitudeValue"
@@ -93,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:text="Longitude"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -111,12 +112,12 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/etPlaceDesc" />
 
         <Button
             android:id="@+id/getLocationBtn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="80dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="Get Location"
@@ -138,11 +139,12 @@
 
         <Button
             android:id="@+id/getAddressBtn"
-            android:layout_width="120dp"
+            android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_marginStart="16dp"
             android:text="Get Address"
             android:textColor="#4E342E"
+            app:layout_constraintEnd_toEndOf="@+id/getLocationBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/getLocationBtn" />
 
@@ -161,12 +163,13 @@
 
         <Button
             android:id="@+id/getWeatherBtn"
-            android:layout_width="120dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="Get Weather"
             android:textColor="#4E342E"
+            app:layout_constraintEnd_toEndOf="@+id/getLocationBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/getAddressBtn" />
 
@@ -175,13 +178,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:text="Permission"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="@+id/getLocationBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/getLocationBtn"
-            app:layout_constraintTop_toTopOf="@+id/getLocationBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/locationLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

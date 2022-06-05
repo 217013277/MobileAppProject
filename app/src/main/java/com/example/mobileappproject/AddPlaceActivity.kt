@@ -2,21 +2,23 @@ package com.example.mobileappproject
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import android.util.Log
-import android.widget.EditText
+import android.widget.*
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -41,6 +43,7 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var tvTime: TextView
     private lateinit var tvPermission: TextView
     private lateinit var tvWeather: TextView
+    private lateinit var ivMainImage: ImageView
 
     private lateinit var _db: DatabaseReference
 
@@ -70,6 +73,7 @@ class AddPlaceActivity : AppCompatActivity() {
         tvTime = findViewById(R.id.tvTime)
         tvPermission = findViewById(R.id.tvPermission)
         tvWeather = findViewById(R.id.tvWeather)
+        ivMainImage = findViewById(R.id.mainImage)
 
         _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
 
@@ -84,9 +88,20 @@ class AddPlaceActivity : AppCompatActivity() {
             goToMainActivity(this)
             finish()
         }
+        ivMainImage.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    CAMERA_PERMISSION_CODE
+                )
+            }
+        }
 
         checkAndGetLocationPermission()
-
         // LocationRequest sets how often etc the app receives location updates
         mLocationRequest = LocationRequest
             .create()
@@ -197,7 +212,9 @@ class AddPlaceActivity : AppCompatActivity() {
 //    }
 
     companion object{
-        private const val PERMISSION_REQUEST_ACCESS_LOCATION = 100
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 100
+        private const val CAMERA_PERMISSION_CODE = 1
+        private const val CAMERA_REQUEST_CODE = 2
     }
 
     override fun onRequestPermissionsResult(
@@ -206,15 +223,35 @@ class AddPlaceActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_ACCESS_LOCATION) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
                 getCurrentLocation()
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
             }
         }
+
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+            } else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
+            }
+        }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK) {
+            if (requestCode == CAMERA_REQUEST_CODE) {
+                val thumbNail: Bitmap = data!!.extras!!.get("data") as Bitmap
+                ivMainImage.setImageBitmap(thumbNail)
+            }
+        }
+    }
+
 
     @SuppressLint("SetTextI18n")
     private fun getAddress() {
@@ -269,10 +306,10 @@ class AddPlaceActivity : AppCompatActivity() {
         queue.add(weatherRequest)
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        goToBiometricActivity(this)
-    }
+//    override fun onRestart() {
+//        super.onRestart()
+//        goToBiometricActivity(this)
+//    }
 
     override fun onPause() {
         super.onPause()
