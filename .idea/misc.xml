@@ -16,8 +16,9 @@
         <entry key="app/src/main/res/drawable/ic_outline_thumb_up_24.xml" value="0.1275" />
         <entry key="app/src/main/res/drawable/is_fav_selecter.xml" value="0.1275" />
         <entry key="app/src/main/res/drawable/thump_up_selector.xml" value="0.1275" />
-        <entry key="app/src/main/res/layout/activity_add_place.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/activity_add_place.xml" value="0.1534090909090909" />
         <entry key="app/src/main/res/layout/activity_biometric.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_detail_place.xml" value="0.30364583333333334" />
         <entry key="app/src/main/res/layout/activity_location.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2838541666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
