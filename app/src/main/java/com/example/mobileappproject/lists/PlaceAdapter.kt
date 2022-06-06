@@ -17,17 +17,12 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
     private var _placeList = placeList
     private var _rowListener: PlaceRowListener = context as PlaceRowListener
 
-    //Set click event on whole item
-    private lateinit var mListener: OnItemClickListener
-    interface OnItemClickListener { fun onItemClick(position: Int) }
-    fun setOnItemClickListener(listener: OnItemClickListener) { mListener = listener }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // inflates the card_view_design view
         // that is used to hold list item
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.place_rows, parent, false)
-        return ViewHolder(view, mListener)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,13 +41,15 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
         holder.isFav.isChecked = isFav
         holder.isFav.setOnClickListener{ _rowListener.onFavClick(objectId, !isFav) }
         holder.removeBtn.setOnClickListener{ _rowListener.onPlaceDelete(objectId, name) }
+        holder.itemView.setOnClickListener{ _rowListener.onItemSelect(objectId) }
+
     }
 
     override fun getItemCount(): Int {
         return _placeList.size
     }
 
-    class ViewHolder(ItemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(ItemView) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = itemView.findViewById(R.id.tvPlaceName) as TextView
         val desc: TextView = itemView.findViewById(R.id.tvPlaceDesc) as TextView
         val address: TextView = itemView.findViewById(R.id.tvAddress) as TextView
@@ -60,9 +57,6 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
         val removeBtn: ImageButton = itemView.findViewById(R.id.btnRemove) as ImageButton
         val image: ImageView = itemView.findViewById(R.id.ivPlaceImage) as ImageView
 
-        init {
-            itemView.setOnClickListener{ listener.onItemClick(bindingAdapterPosition) }
-        }
     }
 
 }

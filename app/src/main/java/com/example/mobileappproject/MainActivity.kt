@@ -1,6 +1,7 @@
 package com.example.mobileappproject
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -45,13 +46,19 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         val recyclerview = findViewById<RecyclerView>(R.id.listviewTask)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = _adapter
-        _adapter.setOnItemClickListener(object : PlaceAdapter.OnItemClickListener{
-            override fun onItemClick(position: Int) {
-                Toast.makeText(this@MainActivity,
-                    "You clicked on item $position",
-                    Toast.LENGTH_SHORT).show()
-            }
-        })
+//        _adapter.setOnItemClickListener(object : PlaceAdapter.OnItemClickListener{
+//            override fun onItemClick(position: Int) {
+//                Toast.makeText(this@MainActivity,
+//                    "You clicked on item $position",
+//                    Toast.LENGTH_SHORT).show()
+//                val intent = Intent(this@MainActivity, AddPlaceActivity::class.java);
+//                val b = Bundle().putInt("objectId", )
+//                b.putInt("key", 1); //Your id
+//                intent.putExtras(b); //Put your id to your next Intent
+//                startActivity(intent);
+//                finish()
+//            }
+//        })
 
         val email = findViewById<TextView>(R.id.email)
         val accountBtn = findViewById<Button>(R.id.AccountBtn)
@@ -124,10 +131,16 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        goToBiometricActivity(this)
+    override fun onItemSelect(objectId: String) {
+        Toast.makeText(this@MainActivity,
+                    "You clicked on item $objectId",
+                    Toast.LENGTH_SHORT).show()
     }
+
+//    override fun onRestart() {
+//        super.onRestart()
+//        goToBiometricActivity(this)
+//    }
 
 
 //    private fun toggleFooter(){
