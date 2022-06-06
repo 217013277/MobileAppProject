@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobileappproject.R
 
-class RecyclerViewAdapter(private val context: Context, private val taskList: MutableList<Task>) :
-    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class TaskRecyclerViewAdapter(private val context: Context, private val taskList: MutableList<Task>) :
+    RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder>() {
     private val _inflater: LayoutInflater = LayoutInflater.from(context)
     private var _taskList = taskList
     private var _rowListener: TaskRowListener = context as TaskRowListener

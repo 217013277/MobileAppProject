@@ -11,17 +11,15 @@ import android.graphics.ImageDecoder
 import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
 import android.os.Looper
 import android.provider.MediaStore
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.*
 import android.util.Log
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -30,18 +28,17 @@ import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
-import com.google.android.gms.tasks.Task
+import com.google.android.gms.location.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.awaitAll
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.IOException
 import java.text.DateFormat
 import java.util.*
+
 
 class AddPlaceActivity : AppCompatActivity() {
 
@@ -148,13 +145,28 @@ class AddPlaceActivity : AppCompatActivity() {
     private fun setupCameraActivityLauncher() {
         cameraActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK && it.data !=null) {
-                filePath = it.data!!.data
+//                filePath = it.data!!.data
                 Log.d("camera", it.data!!.data.toString())
                 Log.d("Camera launcher", "Camera data is not null")
                 val thumbNail: Bitmap = it.data?.extras!!.get("data") as Bitmap
                 ivMainImage.setImageBitmap(thumbNail)
+                val tempUri: Uri? = getImageUri(applicationContext, thumbNail)
+                filePath = tempUri
+                uploadImage(UUID.randomUUID().toString())
             }
         }
+    }
+
+    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            inContext.contentResolver,
+            inImage,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
     }
 
 //    fun convertBitmapToFile(context: Context, bitmap: Bitmap): Uri{
@@ -187,9 +199,6 @@ class AddPlaceActivity : AppCompatActivity() {
     }
 
     private fun openCamera(){
-//        val intent = Intent()
-//        intent.type = "image/*"
-//        intent.action = MediaStore.ACTION_IMAGE_CAPTURE
           val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
           cameraActivityLauncher.launch(intent)
     }
@@ -240,7 +249,7 @@ class AddPlaceActivity : AppCompatActivity() {
         place.isFav = false
         place.imageUrl = uploadedImageUrl
         //Get the object id for the new task from the Firebase Database
-        val newPlace = _db.child(PlaceStatics.FIREBASE_TASK).push()
+        val newPlace = _db.child(PlaceStatics.FIREBASE_PLACE).push()
         place.objectId = newPlace.key
         //Set the values for new task in the firebase using the footer form
         try {

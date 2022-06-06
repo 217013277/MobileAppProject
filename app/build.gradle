@@ -62,4 +62,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
     //Splash screen
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
+    // Read image and show
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

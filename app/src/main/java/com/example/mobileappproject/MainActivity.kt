@@ -19,6 +19,7 @@ import com.example.mobileappproject.lists.PlaceStatics
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity(), PlaceRowListener {
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
         val _taskListener: ValueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                loadTaskList(dataSnapshot)
+                loadPlaceList(dataSnapshot)
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Item failed, log a message
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun loadTaskList(dataSnapshot: DataSnapshot) {
+    private fun loadPlaceList(dataSnapshot: DataSnapshot) {
         Log.d("MainActivity", "load Place list")
         val places = dataSnapshot.children.iterator()
         //Check if current database contains any collection
@@ -100,6 +101,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
                 place.placeAddress = map["placeAddress"] as String?
                 place.isFav = map["isFav"] as Boolean?
                 _placeList!!.add(place)
+                place.imageUrl = map["imageUrl"] as String?
             }
         }
         //alert adapter that has changed
@@ -107,7 +109,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     }
 
     override fun onFavClick(objectId: String, isFav: Boolean) {
-        _db.child(PlaceStatics.FIREBASE_TASK).child(objectId).child("isFav").setValue(isFav).addOnCompleteListener{
+        _db.child(PlaceStatics.FIREBASE_PLACE).child(objectId).child("isFav").setValue(isFav).addOnCompleteListener{
             Toast.makeText(this, "Update successfully", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener{
             Toast.makeText(this, "Cannot update", Toast.LENGTH_SHORT).show()
@@ -115,7 +117,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     }
 
     override fun onPlaceDelete(objectId: String, placeName: String) {
-        _db.child(PlaceStatics.FIREBASE_TASK).child(objectId).removeValue().addOnCompleteListener{
+        _db.child(PlaceStatics.FIREBASE_PLACE).child(objectId).removeValue().addOnCompleteListener{
             Toast.makeText(this, "Removed $placeName ID: $objectId", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener{
             Toast.makeText(this, "Cannot remove $placeName ID: $objectId", Toast.LENGTH_SHORT).show()

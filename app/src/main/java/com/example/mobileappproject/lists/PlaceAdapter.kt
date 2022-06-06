@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobileappproject.R
+import com.squareup.picasso.Picasso
 
 class PlaceAdapter(private val context: Context, private val placeList: MutableList<Place>) :
     RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
@@ -35,6 +36,9 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
         val address: String = _placeList[position].placeAddress.toString()
         val isFav: Boolean = _placeList[position].isFav.toString().toBoolean()
         val objectId: String = _placeList[position].objectId.toString()
+        val imageUrl: String = _placeList[position].imageUrl.toString()
+
+        Picasso.get().load(imageUrl).into(holder.image)
 
         holder.name.text = name
         holder.desc.text = desc
@@ -54,6 +58,7 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
         val address: TextView = itemView.findViewById(R.id.tvAddress) as TextView
         val isFav: CheckBox = itemView.findViewById(R.id.imgPlaceFav) as CheckBox
         val removeBtn: ImageButton = itemView.findViewById(R.id.btnRemove) as ImageButton
+        val image: ImageView = itemView.findViewById(R.id.ivPlaceImage) as ImageView
 
         init {
             itemView.setOnClickListener{ listener.onItemClick(bindingAdapterPosition) }
