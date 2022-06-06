@@ -3,6 +3,7 @@ package com.example.mobileappproject
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,6 +13,7 @@ import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
@@ -33,7 +35,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.awaitAll
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
 import java.text.DateFormat
 import java.util.*
@@ -132,6 +137,7 @@ class AddPlaceActivity : AppCompatActivity() {
                     val source = ImageDecoder.createSource(contentResolver, filePath as Uri)
                     val bitmap = ImageDecoder.decodeBitmap(source)
                     ivMainImage.setImageBitmap(bitmap)
+                    uploadImage(UUID.randomUUID().toString())
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -150,6 +156,16 @@ class AddPlaceActivity : AppCompatActivity() {
             }
         }
     }
+
+//    fun convertBitmapToFile(context: Context, bitmap: Bitmap): Uri{
+//        val file = File(Environment.getExternalStorageDirectory().toString() + File.separator + "123123123")
+//        file.createNewFile()
+//        // Convert bitmap to byte array
+//        val baos = ByteArrayOutputStream()
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 0, baos) // It can be also saved it as JPEG
+//        val bitmapdata = baos.toByteArray()
+//        return bitmapdata
+//    }
 
     private fun launchGallery() {
         val intent = Intent()
@@ -171,8 +187,11 @@ class AddPlaceActivity : AppCompatActivity() {
     }
 
     private fun openCamera(){
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraActivityLauncher.launch(intent)
+//        val intent = Intent()
+//        intent.type = "image/*"
+//        intent.action = MediaStore.ACTION_IMAGE_CAPTURE
+          val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+          cameraActivityLauncher.launch(intent)
     }
 
     private fun checkAndGetLocationPermission() {
@@ -219,6 +238,7 @@ class AddPlaceActivity : AppCompatActivity() {
         place.placeAddress = tvAddress.text.toString()
         place.placeWeather = tvWeather.text.toString()
         place.isFav = false
+        place.imageUrl = uploadedImageUrl
         //Get the object id for the new task from the Firebase Database
         val newPlace = _db.child(PlaceStatics.FIREBASE_TASK).push()
         place.objectId = newPlace.key
@@ -230,6 +250,7 @@ class AddPlaceActivity : AppCompatActivity() {
         }
         newPlace.setValue(place).addOnSuccessListener {
             //Reset the new task description field for reuse.
+            uploadedImageUrl = ""
             etPlaceName.setText("")
             etPlaceDesc.setText("")
             tvLatitude.text = ""
@@ -246,11 +267,11 @@ class AddPlaceActivity : AppCompatActivity() {
     private fun uploadImage(id: String) {
         storageReference = FirebaseStorage.getInstance().reference
         if(filePath != null){
-            val ref = storageReference?.child("placeImages/" + id)
+            val ref = storageReference?.child("places/images/$id")
             val uploadTask = ref?.putFile(filePath!!)
-            uploadTask!!.addOnSuccessListener {
-                if (it.metadata?.reference != null) {
-                    it.storage.downloadUrl.addOnSuccessListener {
+            uploadTask!!.addOnSuccessListener { taskSnapshot ->
+                if (taskSnapshot.metadata?.reference != null) {
+                    taskSnapshot.storage.downloadUrl.addOnSuccessListener {
                         uploadedImageUrl = it.toString()
                         Log.d("Upload Image", uploadedImageUrl)
                     }

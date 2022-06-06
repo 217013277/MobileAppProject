@@ -17,4 +17,5 @@ class Place {
     var placeAddress: String? = null
     var placeWeather: String? = null
     var isFav: Boolean? = false
+    var imageUrl: String? = null
 }
