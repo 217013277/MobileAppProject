@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,11 +36,11 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         val splashScreen = installSplashScreen()
         setContentView(R.layout.activity_main)
 
-        getWindow().setFlags(
+        window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE);
+            WindowManager.LayoutParams.FLAG_SECURE)
 
-        _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
+        _db = FirebaseDatabase.getInstance(getString(R.string.firebase_realtime_database_url)).reference
         _placeList = mutableListOf()
 //        _adapter = TaskAdapter(this, _taskList!!)
         _adapter = PlaceAdapter(this, _placeList!!)

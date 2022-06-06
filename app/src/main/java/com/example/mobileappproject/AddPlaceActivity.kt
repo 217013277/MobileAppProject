@@ -91,7 +91,7 @@ class AddPlaceActivity : AppCompatActivity() {
         ivMainImage = findViewById(R.id.mainImage)
         btnImagePicker = findViewById<Button>(R.id.btnImagePicker)
 
-        _db = FirebaseDatabase.getInstance("https://vtclab-da73a-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
+        _db = FirebaseDatabase.getInstance(getString(R.string.firebase_realtime_database_url)).reference
 
         findViewById<Button>(R.id.getLocationBtn).setOnClickListener {
             Toast.makeText(this, "Start to get location, please wait", Toast.LENGTH_LONG).show()
