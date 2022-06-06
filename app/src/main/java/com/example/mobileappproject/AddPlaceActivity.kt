@@ -89,7 +89,7 @@ class AddPlaceActivity : AppCompatActivity() {
         tvPermission = findViewById(R.id.tvPermission)
         tvWeather = findViewById(R.id.tvWeather)
         ivMainImage = findViewById(R.id.mainImage)
-        btnImagePicker = findViewById<Button>(R.id.btnImagePicker)
+        btnImagePicker = findViewById(R.id.btnImagePicker)
 
         _db = FirebaseDatabase.getInstance(getString(R.string.firebase_realtime_database_url)).reference
 

@@ -8,12 +8,12 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappproject.extensions.goToAddPlaceActivity
 import com.example.mobileappproject.extensions.goToBiometricActivity
+import com.example.mobileappproject.extensions.goToLoginActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceAdapter
 import com.example.mobileappproject.lists.PlaceRowListener
@@ -21,7 +21,6 @@ import com.example.mobileappproject.lists.PlaceStatics
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import com.squareup.picasso.Picasso
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity(), PlaceRowListener {
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Thread.sleep(2000)
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
         setContentView(R.layout.activity_main)
 
         window.setFlags(
@@ -42,24 +41,10 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
         _db = FirebaseDatabase.getInstance(getString(R.string.firebase_realtime_database_url)).reference
         _placeList = mutableListOf()
-//        _adapter = TaskAdapter(this, _taskList!!)
         _adapter = PlaceAdapter(this, _placeList!!)
         val recyclerview = findViewById<RecyclerView>(R.id.listviewTask)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = _adapter
-//        _adapter.setOnItemClickListener(object : PlaceAdapter.OnItemClickListener{
-//            override fun onItemClick(position: Int) {
-//                Toast.makeText(this@MainActivity,
-//                    "You clicked on item $position",
-//                    Toast.LENGTH_SHORT).show()
-//                val intent = Intent(this@MainActivity, AddPlaceActivity::class.java);
-//                val b = Bundle().putInt("objectId", )
-//                b.putInt("key", 1); //Your id
-//                intent.putExtras(b); //Put your id to your next Intent
-//                startActivity(intent);
-//                finish()
-//            }
-//        })
 
         val email = findViewById<TextView>(R.id.email)
         val accountBtn = findViewById<Button>(R.id.AccountBtn)
@@ -69,6 +54,11 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         } else {
             email.text = getString(R.string.no_user_found)
             accountBtn.visibility = View.GONE
+        }
+        accountBtn.setOnClickListener {
+            Firebase.auth.signOut()
+            goToLoginActivity(this)
+            finish()
         }
 
         val _taskListener: ValueEventListener = object : ValueEventListener {
