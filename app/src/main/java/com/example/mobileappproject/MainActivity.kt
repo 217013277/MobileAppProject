@@ -12,7 +12,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappproject.extensions.goToAddPlaceActivity
-import com.example.mobileappproject.extensions.goToBiometricActivity
 import com.example.mobileappproject.extensions.goToLoginActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceAdapter
@@ -125,11 +124,10 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     override fun onItemSelect(objectId: String) {
         Toast.makeText(this@MainActivity, "You clicked on item $objectId", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@MainActivity, DetailPlaceActivity::class.java);
-                val b = Bundle()
-                b.putString("objectId", objectId)
-                intent.putExtras(b); //Put your id to your next Intent
+                val placeDetailBundle = Bundle()
+                placeDetailBundle.putString("objectId", objectId)
+                intent.putExtras(placeDetailBundle); //Put your id to your next Intent
                 startActivity(intent);
-                finish()
     }
 
 //    override fun onRestart() {

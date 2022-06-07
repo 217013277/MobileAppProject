@@ -1,5 +1,6 @@
 package com.example.mobileappproject
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -58,19 +59,13 @@ class DetailPlaceActivity : AppCompatActivity() {
                     addressUnderline.setSpan(UnderlineSpan(), 0, addressUnderline.length, 0)
                     detailAddress.text = addressUnderline
                     detailAddress.setOnClickListener {
-                        val mapsFragment = MapsFragment()
-                        val fragment: Fragment? =
-                        supportFragmentManager.findFragmentByTag(MapsFragment::class.java.simpleName)
-                        if (fragment !is MapsFragment) {
-                            val locationBundle = Bundle()
-                            locationBundle.putString("lat", detailLat)
-                            locationBundle.putString("lon", detailLon)
-                            locationBundle.putString("name", detailName.text.toString())
-                            mapsFragment.arguments = locationBundle
-                            supportFragmentManager.beginTransaction()
-                                .add(R.id.fragmentContainer, mapsFragment, MapsFragment::class.java.simpleName)
-                                .commit()
-                        }
+                        val intent = Intent(this,MapActivity::class.java)
+                        val locationBundle = Bundle()
+                        locationBundle.putString("lat", detailLat)
+                        locationBundle.putString("lon", detailLon)
+                        locationBundle.putString("name", detailName.text.toString())
+                        intent.putExtras(locationBundle)
+                        startActivity(intent)
                     }
 
                     Picasso.get().load(imageUrl).into(detailMainImage)
@@ -85,7 +80,6 @@ class DetailPlaceActivity : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.BtnBackToMain).setOnClickListener {
-            goToMainActivity(this)
             finish()
         }
     }
