@@ -31,6 +31,7 @@ class MapsFragment : Fragment() {
         val lon = bundle?.getString("lon")
         val name = bundle?.getString("name")
         val placeLocation = LatLng(lat!!.toDouble(), lon!!.toDouble())
+        googleMap.uiSettings.isZoomControlsEnabled = true
         googleMap.addMarker(MarkerOptions().position(placeLocation).title("$name"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation, 18F))
 
