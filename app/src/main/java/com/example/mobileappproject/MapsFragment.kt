@@ -1,5 +1,6 @@
 package com.example.mobileappproject
 
+import android.graphics.Camera
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -27,11 +27,13 @@ class MapsFragment : Fragment() {
          * user has installed Google Play services and returned to the app.
          */
         val bundle = arguments
-        val lat = bundle!!.getString("lat")
-        val lon = bundle!!.getString("lon")
-        val sydney = LatLng(lat!!.toDouble(), lon!!.toDouble())
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val lat = bundle?.getString("lat")
+        val lon = bundle?.getString("lon")
+        val name = bundle?.getString("name")
+        val placeLocation = LatLng(lat!!.toDouble(), lon!!.toDouble())
+        googleMap.addMarker(MarkerOptions().position(placeLocation).title("$name"))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation, 18F))
+
     }
 
     override fun onCreateView(

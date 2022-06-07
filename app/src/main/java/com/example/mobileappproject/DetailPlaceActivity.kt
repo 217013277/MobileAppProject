@@ -63,8 +63,9 @@ class DetailPlaceActivity : AppCompatActivity() {
                         supportFragmentManager.findFragmentByTag(MapsFragment::class.java.simpleName)
                         if (fragment !is MapsFragment) {
                             val locationBundle = Bundle()
-                            locationBundle.putString("lat",detailLat)
-                            locationBundle.putString("lon",detailLon)
+                            locationBundle.putString("lat", detailLat)
+                            locationBundle.putString("lon", detailLon)
+                            locationBundle.putString("name", detailName.text.toString())
                             mapsFragment.arguments = locationBundle
                             supportFragmentManager.beginTransaction()
                                 .add(R.id.fragmentContainer, mapsFragment, MapsFragment::class.java.simpleName)
