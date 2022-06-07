@@ -12,11 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.lists.PlaceStatics
-import com.example.mobileappproject.lists.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
-import kotlin.reflect.typeOf
 
 class DetailPlaceActivity : AppCompatActivity() {
 
@@ -47,7 +45,7 @@ class DetailPlaceActivity : AppCompatActivity() {
 //                    detailAddress.text = it.child("placeAddress").value.toString()
                     detailWeather.text = it.child("placeWeather").value.toString()
                     detailLat = it.child("placeLatitude").value.toString()
-                    detailLat = it.child("placeLongitude").value.toString()
+                    detailLon = it.child("placeLongitude").value.toString()
                     imageUrl = it.child("imageUrl").value.toString()
                     //decor text with underline
                     val address = it.child("placeAddress").value.toString()
@@ -64,6 +62,10 @@ class DetailPlaceActivity : AppCompatActivity() {
                         val fragment: Fragment? =
                         supportFragmentManager.findFragmentByTag(MapsFragment::class.java.simpleName)
                         if (fragment !is MapsFragment) {
+                            val locationBundle = Bundle()
+                            locationBundle.putString("lat",detailLat)
+                            locationBundle.putString("lon",detailLon)
+                            mapsFragment.arguments = locationBundle
                             supportFragmentManager.beginTransaction()
                                 .add(R.id.fragmentContainer, mapsFragment, MapsFragment::class.java.simpleName)
                                 .commit()
