@@ -59,14 +59,14 @@ class LoginActivity : AppCompatActivity() {
         val email = editTextEmailAddress.text.toString()
         val password = editTextPassword.text.toString()
 
-        val isEmailChecked = checkEmail(editTextEmailAddress)
-        val isPasswordChecked = checkPassword(editTextPassword)
+        val isEmailChecked = FormValidator().checkEmail(editTextEmailAddress)
+        val isPasswordChecked = FormValidator().checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
             Firebase.auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if(task.isSuccessful && Firebase.auth.currentUser != null){
-                        goToMainActivity(this)
-                        finish()
+                    ActivityChanger().goToMainActivity(this)
+                    finish()
                 }
             }.addOnFailureListener { exception ->
                 Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
@@ -103,17 +103,17 @@ class LoginActivity : AppCompatActivity() {
 
     private fun openBiometricAuth() {
         val onSucceeded = Runnable {
-            goToMainActivity(this)
+            ActivityChanger().goToMainActivity(this)
         }
-        biometricAuth(this, this, onSucceeded)
+        BiometricAuth().biometricAuth(this, this, onSucceeded)
     }
 
     private fun updateUI(account: GoogleSignInAccount){
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
         Firebase.auth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
+                ActivityChanger().goToMainActivity(this)
                 finish()
-                goToMainActivity(this)
             }
         }
     }
@@ -129,7 +129,8 @@ class LoginActivity : AppCompatActivity() {
         val user = Firebase.auth.currentUser
 
         goToRegisterBtn.setOnClickListener{
-            goToRegisterActivity(this)
+            ActivityChanger().goToRegisterActivity(this)
+            finish()
             Toast.makeText(this,"go to Login Page",Toast.LENGTH_SHORT).show()
         }
 

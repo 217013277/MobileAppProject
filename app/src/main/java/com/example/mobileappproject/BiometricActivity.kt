@@ -4,9 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
-import com.example.mobileappproject.extensions.biometricAuth
-import com.example.mobileappproject.extensions.goToLoginActivity
-import com.example.mobileappproject.extensions.goToMainActivity
+import com.example.mobileappproject.extensions.ActivityChanger
+import com.example.mobileappproject.extensions.BiometricAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -25,15 +24,15 @@ class BiometricActivity : AppCompatActivity() {
         backToLoginBtn.setOnClickListener {
             Firebase.auth.signOut()
             finish()
-            goToLoginActivity(this)
+            ActivityChanger().goToLoginActivity(this)
         }
     }
 
     private fun openBiometricAuth() {
         val onSucceeded = Runnable {
-            goToMainActivity(this)
+            ActivityChanger().goToMainActivity(this)
             finish()
         }
-        biometricAuth(this, this, onSucceeded)
+        BiometricAuth().biometricAuth(this, this, onSucceeded)
     }
 }

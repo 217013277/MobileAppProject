@@ -4,13 +4,9 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-internal class FormValidatorKtTest {
+internal class BiometricAuthTest {
 
     @Test
-    fun checkEmail() {
-    }
-
-    @Test
-    fun checkPassword() {
+    fun biometricAuth() {
     }
 }

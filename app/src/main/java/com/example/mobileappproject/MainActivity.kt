@@ -11,8 +11,7 @@ import android.widget.*
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobileappproject.extensions.goToAddPlaceActivity
-import com.example.mobileappproject.extensions.goToLoginActivity
+import com.example.mobileappproject.extensions.ActivityChanger
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceAdapter
 import com.example.mobileappproject.lists.PlaceRowListener
@@ -56,7 +55,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
         }
         accountBtn.setOnClickListener {
             Firebase.auth.signOut()
-            goToLoginActivity(this)
+            ActivityChanger().goToLoginActivity(this)
             finish()
         }
 
@@ -72,7 +71,7 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 
         _db.orderByKey().addValueEventListener(_taskListener)
 
-        findViewById<Button>(R.id.goToAddPlaceBtn).setOnClickListener{ goToAddPlaceActivity(this) }
+        findViewById<Button>(R.id.goToAddPlaceBtn).setOnClickListener{ ActivityChanger().goToAddPlaceActivity(this) }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -122,11 +121,11 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     }
 
     override fun onItemSelect(objectId: String) {
-        val intent = Intent(this@MainActivity, DetailPlaceActivity::class.java);
+        val intent = Intent(this@MainActivity, DetailPlaceActivity::class.java)
                 val placeDetailBundle = Bundle()
                 placeDetailBundle.putString("objectId", objectId)
-                intent.putExtras(placeDetailBundle); //Put your id to your next Intent
-                startActivity(intent);
+                intent.putExtras(placeDetailBundle) //Put your id to your next Intent
+                startActivity(intent)
     }
 
 //    override fun onRestart() {

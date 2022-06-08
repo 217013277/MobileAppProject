@@ -7,10 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mobileappproject.extensions.checkEmail
-import com.example.mobileappproject.extensions.checkPassword
-import com.example.mobileappproject.extensions.goToBiometricActivity
-import com.example.mobileappproject.extensions.goToLoginActivity
+import com.example.mobileappproject.extensions.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -29,7 +26,7 @@ class RegisterActivity : AppCompatActivity() {
         val goToLoginBtn = findViewById<TextView>(R.id.tvToLogin)
         goToLoginBtn.setOnClickListener{
             Toast.makeText(this,"go to Login Page",Toast.LENGTH_SHORT).show()
-            goToLoginActivity(this)
+            ActivityChanger().goToLoginActivity(this)
         }
 
     }
@@ -40,13 +37,13 @@ class RegisterActivity : AppCompatActivity() {
         val email=editTextEmailAddress.text.toString()
         val password=editTextPassword.text.toString()
 
-        val isEmailChecked = checkEmail(editTextEmailAddress)
-        val isPasswordChecked = checkPassword(editTextPassword)
+        val isEmailChecked = FormValidator().checkEmail(editTextEmailAddress)
+        val isPasswordChecked = FormValidator().checkPassword(editTextPassword)
 
         if (isEmailChecked && isPasswordChecked) {
             Firebase.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    goToLoginActivity(this)
+                    ActivityChanger().goToLoginActivity(this)
                     finish()
                 }
             }.addOnFailureListener { exception ->
@@ -65,7 +62,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onStart()
         val user = Firebase.auth.currentUser
         if(user!=null){
-            goToBiometricActivity(this)
+            ActivityChanger().goToBiometricActivity(this)
         }
     }
 }
