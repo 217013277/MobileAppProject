@@ -134,20 +134,4 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
 //        super.onRestart()
 //        goToBiometricActivity(this)
 //    }
-
-
-//    private fun toggleFooter(){
-//        if (footer.visibility == View.GONE) {
-//            footer.visibility = View.VISIBLE
-//            footerToggle.visibility = View.GONE
-//        } else {
-//            footer.visibility = View.GONE
-//            footerToggle.visibility = View.VISIBLE
-//        }
-//    }
-//
-//    private fun closeKeyboard (view: View) {
-//        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(view.windowToken, 0)
-//    }
 }

@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import com.example.mobileappproject.extensions.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -18,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -26,10 +24,6 @@ import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
-
-    private lateinit var executor: Executor
-    private lateinit var biometricPrompt: BiometricPrompt
-    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,10 +66,9 @@ class LoginActivity : AppCompatActivity() {
 
         if (isEmailChecked && isPasswordChecked) {
             Firebase.auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
-                if(task.isSuccessful){
-//                    AccountPreference.setEmail(this, firebaseAuth.currentUser?.email.toString())
-                    goToMainActivity(this)
-                    finish()
+                if(task.isSuccessful && Firebase.auth.currentUser != null){
+                        goToMainActivity(this)
+                        finish()
                 }
             }.addOnFailureListener { exception ->
                 Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
@@ -130,25 +123,28 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val biometricBtn = findViewById<ImageButton>(R.id.biometricBtn)
+        val tvLoggedInText = findViewById<TextView>(R.id.tvLoggedInText)
+        val tvLoggedInEmail = findViewById<TextView>(R.id.tvLoggedInEmail)
         val tvAskIfAccount = findViewById<TextView>(R.id.tvAskIfAccountExisted)
         val goToRegisterBtn = findViewById<TextView>(R.id.tvToRegister)
 
         val user = Firebase.auth.currentUser
 
+        goToRegisterBtn.setOnClickListener{
+            goToRegisterActivity(this)
+            Toast.makeText(this,"go to Login Page",Toast.LENGTH_SHORT).show()
+        }
+
         if (user == null) {
             biometricBtn.visibility = View.GONE
-
+            tvLoggedInText.visibility = View.GONE
+            tvLoggedInEmail.visibility = View.GONE
             tvAskIfAccount.text = getString(R.string.do_not_have_an_account)
-            goToRegisterBtn.setOnClickListener{
-                goToRegisterActivity(this)
-            }
+
         } else {
+            tvLoggedInEmail.text = user.email
             tvAskIfAccount.text = getString(R.string.want_to_sign_in_with_another_account)
             goToRegisterBtn.text = getString(R.string.logout)
-            goToRegisterBtn.setOnClickListener{
-                Firebase.auth.signOut()
-                goToRegisterActivity(this)
-            }
         }
     }
 

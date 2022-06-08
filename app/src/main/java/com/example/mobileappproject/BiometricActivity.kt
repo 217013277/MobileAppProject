@@ -12,6 +12,8 @@ import com.example.mobileappproject.extensions.biometricAuth
 import com.example.mobileappproject.extensions.goToBiometricActivity
 import com.example.mobileappproject.extensions.goToLoginActivity
 import com.example.mobileappproject.extensions.goToMainActivity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.util.concurrent.Executor
 
 class BiometricActivity : AppCompatActivity() {
@@ -27,6 +29,7 @@ class BiometricActivity : AppCompatActivity() {
 
         biometricLoginButton.setOnClickListener { openBiometricAuth() }
         backToLoginBtn.setOnClickListener {
+            Firebase.auth.signOut()
             finish()
             goToLoginActivity(this)
         }
@@ -38,10 +41,5 @@ class BiometricActivity : AppCompatActivity() {
             finish()
         }
         biometricAuth(this, this, onSucceeded)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        openBiometricAuth()
     }
 }

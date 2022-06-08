@@ -21,10 +21,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
@@ -48,10 +48,11 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var tvLongitude: TextView
     private lateinit var tvAddress: TextView
     private lateinit var tvTime: TextView
-    private lateinit var tvPermission: TextView
     private lateinit var tvWeather: TextView
     private lateinit var ivMainImage: ImageView
     private lateinit var btnImagePicker: Button
+    private lateinit var goToMainBtn: Button
+    private lateinit var btnSubmit: Button
 
     private lateinit var _db: DatabaseReference
 
@@ -61,7 +62,6 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var uploadedImageUrl: String
     //Firebase storage for upload image
     private var storageReference: StorageReference? = null
-
     // member variables that hold location info
     private var mLastLocation: Location? = null
     private var mLocationRequest: LocationRequest? = null
@@ -71,6 +71,7 @@ class AddPlaceActivity : AppCompatActivity() {
     private var mLocationCallBack: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             mLastLocation = result.lastLocation
+            tvTime.text = DateFormat.getTimeInstance().format(Date())
             tvLatitude.text = mLastLocation!!.latitude.toString()
             tvLongitude.text = mLastLocation!!.longitude.toString()
         }
@@ -84,26 +85,27 @@ class AddPlaceActivity : AppCompatActivity() {
         etPlaceDesc = findViewById(R.id.etPlaceDesc)
         tvLatitude = findViewById(R.id.latitudeValue)
         tvLongitude = findViewById(R.id.longitudeValue)
-        tvAddress = findViewById(R.id.addressValue)
+        tvAddress = findViewById(R.id.tvAddress)
         tvTime = findViewById(R.id.tvTime)
-        tvPermission = findViewById(R.id.tvPermission)
         tvWeather = findViewById(R.id.tvWeather)
         ivMainImage = findViewById(R.id.mainImage)
         btnImagePicker = findViewById(R.id.btnImagePicker)
+        goToMainBtn = findViewById(R.id.goToMainBtn)
+        btnSubmit = findViewById(R.id.btnSubmit)
 
         _db = FirebaseDatabase.getInstance(getString(R.string.firebase_realtime_database_url)).reference
 
-        findViewById<Button>(R.id.getLocationBtn).setOnClickListener {
+        findViewById<LinearLayout>(R.id.locationLayout).setOnClickListener {
             Toast.makeText(this, "Start to get location, please wait", Toast.LENGTH_LONG).show()
             getCurrentLocation()
         }
-        findViewById<Button>(R.id.getAddressBtn).setOnClickListener { getAddress() }
-        findViewById<Button>(R.id.getWeatherBtn).setOnClickListener { getWeather() }
-        findViewById<Button>(R.id.submitBtn).setOnClickListener { addPlace() }
-        findViewById<Button>(R.id.goToMainBtn).setOnClickListener {
-            goToMainActivity(this)
-            finish()
+        tvLatitude.doAfterTextChanged {
+            getAddress()
+            getWeather()
         }
+
+        btnSubmit.setOnClickListener { addPlace() }
+        goToMainBtn.setOnClickListener { finish() }
 
         setupPickImageActivityLauncher()
         btnImagePicker.setOnClickListener { launchGallery() }
@@ -118,6 +120,7 @@ class AddPlaceActivity : AppCompatActivity() {
             .setInterval(10)
             .setFastestInterval(5)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        getCurrentLocation()
     }
 
     companion object{
@@ -169,16 +172,6 @@ class AddPlaceActivity : AppCompatActivity() {
         return Uri.parse(path)
     }
 
-//    fun convertBitmapToFile(context: Context, bitmap: Bitmap): Uri{
-//        val file = File(Environment.getExternalStorageDirectory().toString() + File.separator + "123123123")
-//        file.createNewFile()
-//        // Convert bitmap to byte array
-//        val baos = ByteArrayOutputStream()
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 0, baos) // It can be also saved it as JPEG
-//        val bitmapdata = baos.toByteArray()
-//        return bitmapdata
-//    }
-
     private fun launchGallery() {
         val intent = Intent()
         intent.type = "image/*"
@@ -213,18 +206,16 @@ class AddPlaceActivity : AppCompatActivity() {
             val coarseLocationGranted = result.getOrDefault(
                 Manifest.permission.ACCESS_COARSE_LOCATION, false
             )
-            if (fineLocationGranted != null && fineLocationGranted) {
+            if (fineLocationGranted != null && fineLocationGranted &&
+                coarseLocationGranted != null && coarseLocationGranted) {
                 // Precise location access granted.
                 // permissionOk = true;
-                tvPermission.text = "permission granted"
-            } else if (coarseLocationGranted != null && coarseLocationGranted) {
-                // Only approximate location access granted.
-                // permissionOk = true;
-                tvPermission.text = "permission granted"
+                tvTime.text = "permission granted"
+                getCurrentLocation()
             } else {
                 // permissionOk = false;
                 // No location access granted.
-                tvPermission.text = "permission not granted"
+                tvTime.text = "permission not granted"
             }
         }
 
@@ -259,6 +250,8 @@ class AddPlaceActivity : AppCompatActivity() {
         }
         newPlace.setValue(place).addOnSuccessListener {
             //Reset the new task description field for reuse.
+            Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
+            finish()
             uploadedImageUrl = ""
             etPlaceName.setText("")
             etPlaceDesc.setText("")
@@ -266,14 +259,13 @@ class AddPlaceActivity : AppCompatActivity() {
             tvLongitude.text = ""
             tvAddress.text = ""
             tvWeather.text = ""
-            Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
-            goToMainActivity(this)
         }.addOnFailureListener {
             Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun uploadImage(id: String) {
+        btnSubmit.isClickable = false
         storageReference = FirebaseStorage.getInstance().reference
         if(filePath != null){
             val ref = storageReference?.child("places/images/$id")
@@ -282,7 +274,7 @@ class AddPlaceActivity : AppCompatActivity() {
                 if (taskSnapshot.metadata?.reference != null) {
                     taskSnapshot.storage.downloadUrl.addOnSuccessListener {
                         uploadedImageUrl = it.toString()
-                        Log.d("Upload Image", uploadedImageUrl)
+
                     }
                 }
             }.addOnFailureListener{
@@ -291,11 +283,12 @@ class AddPlaceActivity : AppCompatActivity() {
         }else{
             Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
         }
+        btnSubmit.isClickable = true
     }
 
     private fun getCurrentLocation() {
         mLocationProvider = LocationServices.getFusedLocationProviderClient(this)
-        tvPermission.text = "Started updating location"
+        tvTime.text = "Started updating location"
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -360,7 +353,6 @@ class AddPlaceActivity : AppCompatActivity() {
     private fun getAddress() {
         mGeocoder = Geocoder(this)
         try {
-            val lat = tvLatitude.text.toString().toDouble()
             // Only 1 address is needed here.
             val addresses = mGeocoder!!.getFromLocation(
                 tvLatitude.text.toString().toDouble(), tvLongitude.text.toString().toDouble(), 1
@@ -414,23 +406,28 @@ class AddPlaceActivity : AppCompatActivity() {
         super.onPause()
         PostTemplate.setPlaceName(this, etPlaceName.text.toString())
         PostTemplate.setPlaceDesc(this, etPlaceDesc.text.toString())
-        PostTemplate.setLatitude(this, tvLatitude.text.toString())
-        PostTemplate.setLongitude(this, tvLongitude.text.toString())
-        PostTemplate.setAddress(this, tvAddress.text.toString())
+//        PostTemplate.setLatitude(this, tvLatitude.text.toString())
+//        PostTemplate.setLongitude(this, tvLongitude.text.toString())
+//        PostTemplate.setAddress(this, tvAddress.text.toString())
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         tvTime.text = DateFormat.getDateTimeInstance().format(Date())
 
         etPlaceName.setText(PostTemplate.getPlaceName(this))
         etPlaceDesc.setText(PostTemplate.getPlaceDesc(this))
-        tvLatitude.text = PostTemplate.getLatitude(this).toString()
-        tvLongitude.text = PostTemplate.getLongitude(this).toString()
-        tvAddress.text = PostTemplate.getAddress(this).toString()
-
-        if (tvLatitude.text == "" || tvLongitude.text == "") {
-            getCurrentLocation()
-        }
+//        tvLatitude.text = PostTemplate.getLatitude(this).toString()
+//        tvLongitude.text = PostTemplate.getLongitude(this).toString()
+//        tvAddress.text = PostTemplate.getAddress(this).toString()
+//
+//        if (tvLatitude.text == "" && tvLongitude.text == "") {
+//            getCurrentLocation()
+//        } else {
+//            getAddress()
+//        }
+//        if (tvAddress.text == "") {
+//            tvAddress.text == "Get Address"
+//        }
     }
 }
