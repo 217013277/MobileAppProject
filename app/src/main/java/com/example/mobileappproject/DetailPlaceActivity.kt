@@ -29,6 +29,7 @@ class DetailPlaceActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail_place)
 
         val detailMainImage = findViewById<ImageView>(R.id.ivMainImage)
+        val detailTime = findViewById<TextView>(R.id.tvDetailTime)
         val detailName = findViewById<TextView>(R.id.tvDetailName)
         val detailDesc = findViewById<TextView>(R.id.tvDetailDesc)
         val detailAddress = findViewById<TextView>(R.id.tvDetailAddress)
@@ -39,8 +40,8 @@ class DetailPlaceActivity : AppCompatActivity() {
         val b = intent.extras
         if (b != null) { val id = b.getString("objectId")
             if (id != null) {
-                Toast.makeText(this, id, Toast.LENGTH_SHORT).show()
                 _db.child(PlaceStatics.FIREBASE_PLACE).child(id).get().addOnSuccessListener {
+                    detailTime.text = it.child("placeTime").value.toString()
                     detailName.text = it.child("placeName").value.toString()
                     detailDesc.text = it.child("placeDesc").value.toString()
 //                    detailAddress.text = it.child("placeAddress").value.toString()
@@ -76,8 +77,6 @@ class DetailPlaceActivity : AppCompatActivity() {
                 Toast.makeText(this, "Cannot not find the object id", Toast.LENGTH_SHORT).show()
             }
         }
-
-
 
         findViewById<Button>(R.id.BtnBackToMain).setOnClickListener {
             finish()

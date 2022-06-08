@@ -122,7 +122,6 @@ class MainActivity : AppCompatActivity(), PlaceRowListener {
     }
 
     override fun onItemSelect(objectId: String) {
-        Toast.makeText(this@MainActivity, "You clicked on item $objectId", Toast.LENGTH_SHORT).show()
         val intent = Intent(this@MainActivity, DetailPlaceActivity::class.java);
                 val placeDetailBundle = Bundle()
                 placeDetailBundle.putString("objectId", objectId)

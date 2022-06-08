@@ -100,8 +100,10 @@ class AddPlaceActivity : AppCompatActivity() {
             getCurrentLocation()
         }
         tvLatitude.doAfterTextChanged {
-            getAddress()
-            getWeather()
+            if (tvLatitude.text.isNotEmpty()&&tvLongitude.text.isNotEmpty()) {
+                getAddress()
+                getWeather()
+            }
         }
 
         btnSubmit.setOnClickListener { addPlace() }
@@ -196,6 +198,33 @@ class AddPlaceActivity : AppCompatActivity() {
           cameraActivityLauncher.launch(intent)
     }
 
+    private fun uploadImage(id: String) {
+        btnSubmit.isClickable = false
+        btnImagePicker.text = "Uploading image"
+        storageReference = FirebaseStorage.getInstance().reference
+        if(filePath != null){
+            val ref = storageReference?.child("places/images/$id")
+            val uploadTask = ref?.putFile(filePath!!)
+            uploadTask!!.addOnSuccessListener { taskSnapshot ->
+                if (taskSnapshot.metadata?.reference != null) {
+                    taskSnapshot.storage.downloadUrl.addOnSuccessListener {
+                        uploadedImageUrl = it.toString()
+                        btnSubmit.isClickable = true
+                        btnImagePicker.text = "Upload image successfully"
+                    }
+                }
+            }.addOnFailureListener{
+                Log.e("Upload Image", it.toString())
+                btnSubmit.isClickable = true
+                btnImagePicker.text = "Upload image not succeed"
+            }
+        }else{
+            Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
+            btnSubmit.isClickable = true
+            btnImagePicker.text = "Upload image not succeed"
+        }
+    }
+
     private fun checkAndGetLocationPermission() {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -237,6 +266,7 @@ class AddPlaceActivity : AppCompatActivity() {
         place.placeLongitude = tvLongitude.text.toString()
         place.placeAddress = tvAddress.text.toString()
         place.placeWeather = tvWeather.text.toString()
+        place.placeTime = tvTime.text.toString()
         place.isFav = false
         place.imageUrl = uploadedImageUrl
         //Get the object id for the new task from the Firebase Database
@@ -262,28 +292,6 @@ class AddPlaceActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun uploadImage(id: String) {
-        btnSubmit.isClickable = false
-        storageReference = FirebaseStorage.getInstance().reference
-        if(filePath != null){
-            val ref = storageReference?.child("places/images/$id")
-            val uploadTask = ref?.putFile(filePath!!)
-            uploadTask!!.addOnSuccessListener { taskSnapshot ->
-                if (taskSnapshot.metadata?.reference != null) {
-                    taskSnapshot.storage.downloadUrl.addOnSuccessListener {
-                        uploadedImageUrl = it.toString()
-
-                    }
-                }
-            }.addOnFailureListener{
-                Log.e("Upload Image", it.toString())
-            }
-        }else{
-            Toast.makeText(this, "Please Upload an Image", Toast.LENGTH_SHORT).show()
-        }
-        btnSubmit.isClickable = true
     }
 
     private fun getCurrentLocation() {
@@ -382,12 +390,8 @@ class AddPlaceActivity : AppCompatActivity() {
     }
 
     private fun getWeather() {
-        val queue = Volley.newRequestQueue(this)
-
-        val lat = tvLatitude.text
-        val lon = tvLongitude.text
         val key = getString(R.string.open_weather_api_key)
-        val url = "https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}"
+        val url = "https://api.openweathermap.org/data/2.5/weather?lat=${tvLatitude.text}&lon=${tvLongitude.text}&appid=${key}"
 
         val weatherRequest = StringRequest(
             Request.Method.GET, url,
@@ -399,6 +403,8 @@ class AddPlaceActivity : AppCompatActivity() {
             }, { error ->
                 Log.d("Weather", "error: $error")
             })
+
+        val queue = Volley.newRequestQueue(this)
         queue.add(weatherRequest)
     }
 
@@ -406,20 +412,20 @@ class AddPlaceActivity : AppCompatActivity() {
         super.onPause()
         PostTemplate.setPlaceName(this, etPlaceName.text.toString())
         PostTemplate.setPlaceDesc(this, etPlaceDesc.text.toString())
-//        PostTemplate.setLatitude(this, tvLatitude.text.toString())
-//        PostTemplate.setLongitude(this, tvLongitude.text.toString())
-//        PostTemplate.setAddress(this, tvAddress.text.toString())
+        PostTemplate.setLatitude(this, tvLatitude.text.toString())
+        PostTemplate.setLongitude(this, tvLongitude.text.toString())
+        PostTemplate.setAddress(this, tvAddress.text.toString())
+        PostTemplate.setAddress(this, tvWeather.text.toString())
     }
 
     override fun onStart() {
         super.onStart()
-        tvTime.text = DateFormat.getDateTimeInstance().format(Date())
-
         etPlaceName.setText(PostTemplate.getPlaceName(this))
         etPlaceDesc.setText(PostTemplate.getPlaceDesc(this))
-//        tvLatitude.text = PostTemplate.getLatitude(this).toString()
-//        tvLongitude.text = PostTemplate.getLongitude(this).toString()
-//        tvAddress.text = PostTemplate.getAddress(this).toString()
+        tvLatitude.text = PostTemplate.getLatitude(this).toString()
+        tvLongitude.text = PostTemplate.getLongitude(this).toString()
+        tvAddress.text = PostTemplate.getAddress(this).toString()
+        tvWeather.text = PostTemplate.getWeather(this).toString()
 //
 //        if (tvLatitude.text == "" && tvLongitude.text == "") {
 //            getCurrentLocation()
