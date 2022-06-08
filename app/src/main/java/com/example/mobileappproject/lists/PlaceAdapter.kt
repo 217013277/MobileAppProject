@@ -42,7 +42,6 @@ class PlaceAdapter(private val context: Context, private val placeList: MutableL
         holder.isFav.setOnClickListener{ _rowListener.onFavClick(objectId, !isFav) }
         holder.removeBtn.setOnClickListener{ _rowListener.onPlaceDelete(objectId, name) }
         holder.itemView.setOnClickListener{ _rowListener.onItemSelect(objectId) }
-
     }
 
     override fun getItemCount(): Int {

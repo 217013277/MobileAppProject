@@ -11,7 +11,6 @@ import com.example.mobileappproject.extensions.checkEmail
 import com.example.mobileappproject.extensions.checkPassword
 import com.example.mobileappproject.extensions.goToBiometricActivity
 import com.example.mobileappproject.extensions.goToLoginActivity
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

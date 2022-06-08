@@ -10,8 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.example.mobileappproject.extensions.goToMainActivity
 import com.example.mobileappproject.lists.PlaceStatics
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

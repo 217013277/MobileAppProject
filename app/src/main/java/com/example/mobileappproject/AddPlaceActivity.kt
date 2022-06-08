@@ -88,7 +88,7 @@ class AddPlaceActivity : AppCompatActivity() {
         tvAddress = findViewById(R.id.tvAddress)
         tvTime = findViewById(R.id.tvTime)
         tvWeather = findViewById(R.id.tvWeather)
-        ivMainImage = findViewById(R.id.mainImage)
+        ivMainImage = findViewById(R.id.ivMainImageDetail)
         btnImagePicker = findViewById(R.id.btnImagePicker)
         goToMainBtn = findViewById(R.id.goToMainBtn)
         btnSubmit = findViewById(R.id.btnSubmit)

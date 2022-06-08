@@ -2,7 +2,6 @@ package com.example.mobileappproject
 
 import android.app.Activity
 import android.content.Intent
-import androidx.biometric.BiometricPrompt
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +19,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
