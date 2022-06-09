@@ -2,6 +2,8 @@ package com.example.mobileappproject.extensions
 
 import android.util.Patterns
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 
 class FormValidator {
     fun checkEmail(ediTextEmail: EditText): Boolean {
@@ -31,6 +33,15 @@ class FormValidator {
         }
         if (password.length > 12) {
             editTextPassword.error = "Max length 12"
+            return false
+        }
+        return true
+    }
+
+    fun checkIsNotEmpty(editText: EditText): Boolean {
+        val et = editText.text.toString()
+        if (et.isEmpty()) {
+            editText.error = "This field is required"
             return false
         }
         return true

@@ -25,6 +25,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.mobileappproject.extensions.FormValidator
 import com.example.mobileappproject.lists.Place
 import com.example.mobileappproject.lists.PlaceStatics
 import com.example.mobileappproject.sharedPreferences.PostTemplate
@@ -106,7 +107,13 @@ class AddPlaceActivity : AppCompatActivity() {
             }
         }
 
-        btnSubmit.setOnClickListener { addPlace() }
+        btnSubmit.setOnClickListener {
+            val isEtPlaceNameCheck = FormValidator().checkIsNotEmpty(etPlaceName)
+            val isEtPlaceDescCheck = FormValidator().checkIsNotEmpty(etPlaceDesc)
+            if (isEtPlaceNameCheck && isEtPlaceDescCheck){
+                addPlace()
+            }
+        }
         goToMainBtn.setOnClickListener { finish() }
 
         setupPickImageActivityLauncher()
@@ -257,6 +264,8 @@ class AddPlaceActivity : AppCompatActivity() {
     }
 
     private fun addPlace() {
+
+
         //Declare and Initialise the Task
         val place = Place.create()
         //Set Task Description and isDone Status

@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".BiometricActivity">
 
+    <TextView
+        android:id="@+id/tvLoggedInEmailHintBiometric"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You are logged in as:"
+        android:textSize="20dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/tvLoggedInEmailBiometric"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvLoggedInEmailBiometric"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ABC@123.com"
+        android:textSize="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@id/biometricBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageButton
         android:id="@+id/biometricBtn"
         android:layout_width="100dp"
@@ -25,6 +47,7 @@
         android:layout_marginTop="24dp"
         android:text="Back to login"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/biometricBtn" />

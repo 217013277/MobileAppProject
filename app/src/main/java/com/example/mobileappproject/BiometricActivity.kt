@@ -2,12 +2,14 @@ package com.example.mobileappproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.example.mobileappproject.extensions.ActivityChanger
 import com.example.mobileappproject.extensions.BiometricAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import org.w3c.dom.Text
 
 class BiometricActivity : AppCompatActivity() {
 
@@ -17,10 +19,21 @@ class BiometricActivity : AppCompatActivity() {
 
         openBiometricAuth()
 
+        val tvLoggedInEmailHintBiometric = findViewById<TextView>(R.id.tvLoggedInEmailHintBiometric)
+        val tvLoggedInEmailBiometric = findViewById<TextView>(R.id.tvLoggedInEmailBiometric)
         val biometricLoginButton = findViewById<ImageButton>(R.id.biometricBtn)
         val backToLoginBtn = findViewById<TextView>(R.id.backToLoginBtn)
 
+        if (Firebase.auth.currentUser != null) {
+            tvLoggedInEmailBiometric.text = Firebase.auth.currentUser!!.email
+        } else {
+            tvLoggedInEmailHintBiometric.visibility = View.GONE
+            tvLoggedInEmailBiometric.visibility = View.GONE
+        }
+
+
         biometricLoginButton.setOnClickListener { openBiometricAuth() }
+
         backToLoginBtn.setOnClickListener {
             Firebase.auth.signOut()
             finish()
