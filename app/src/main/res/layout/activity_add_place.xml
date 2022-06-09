@@ -20,12 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1"
-
             android:src="@drawable/ic_baseline_photo_camera_24"
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="Take Photo" />
 
         <Button
             android:id="@+id/btnImagePicker"
@@ -40,6 +40,7 @@
             android:id="@+id/etPlaceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:layout_marginTop="8dp"
             android:hint="Place Name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,8 +51,10 @@
             android:id="@+id/etPlaceDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:hint="Place Description"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etPlaceName" />
 
@@ -61,32 +64,49 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPlaceDesc">
+            app:layout_constraintTop_toBottomOf="@+id/btnGetLocation">
 
             <TextView
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:text="Time"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:layout_weight="1"
-                 />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/tvWeather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:text="Weather"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:layout_weight="1"
-                />
+                android:textSize="24sp" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvLocationPermission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Location Permission"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etPlaceDesc"/>
 
+        <Button
+            android:id="@+id/btnGetLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Get Location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLocationPermission" />
 
         <LinearLayout
             android:id="@+id/locationLayout"
@@ -112,7 +132,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text=", "
+                android:text=" , "
                 android:textSize="24sp" />
 
             <TextView

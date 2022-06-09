@@ -14,7 +14,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -54,13 +56,15 @@ class AddPlaceActivity : AppCompatActivity() {
     private lateinit var btnImagePicker: Button
     private lateinit var goToMainBtn: Button
     private lateinit var btnSubmit: Button
+    private lateinit var tvLocationPermission: TextView
+    private lateinit var btnGetLocation: Button
 
     private lateinit var _db: DatabaseReference
 
     private lateinit var cameraActivityLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickImageActivityLauncher: ActivityResultLauncher<Intent>
     private var filePath: Uri? = null
-    private lateinit var uploadedImageUrl: String
+    private var uploadedImageUrl: String = ""
     //Firebase storage for upload image
     private var storageReference: StorageReference? = null
     // member variables that hold location info
@@ -72,7 +76,6 @@ class AddPlaceActivity : AppCompatActivity() {
     private var mLocationCallBack: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             mLastLocation = result.lastLocation
-            tvTime.text = DateFormat.getTimeInstance().format(Date())
             tvLatitude.text = mLastLocation!!.latitude.toString()
             tvLongitude.text = mLastLocation!!.longitude.toString()
         }
@@ -93,15 +96,21 @@ class AddPlaceActivity : AppCompatActivity() {
         btnImagePicker = findViewById(R.id.btnImagePicker)
         goToMainBtn = findViewById(R.id.goToMainBtn)
         btnSubmit = findViewById(R.id.btnSubmit)
+        tvLocationPermission = findViewById(R.id.tvLocationPermission)
+        btnGetLocation = findViewById(R.id.btnGetLocation)
+
+        tvTime.text = DateFormat.getTimeInstance().format(Date())
 
         _db = FirebaseDatabase.getInstance(getString(R.string.firebase_realtime_database_url)).reference
 
-        findViewById<LinearLayout>(R.id.locationLayout).setOnClickListener {
-            Toast.makeText(this, "Start to get location, please wait", Toast.LENGTH_LONG).show()
-            getCurrentLocation()
-        }
+        btnGetLocation.setOnClickListener { getCurrentLocation() }
+
         tvLatitude.doAfterTextChanged {
-            if (tvLatitude.text.isNotEmpty()&&tvLongitude.text.isNotEmpty()) {
+            if ( tvLatitude.text.isNotEmpty() &&
+                tvLatitude.text != "Latitude" &&
+                tvLongitude.text.isNotEmpty() &&
+                tvLongitude.text != "Longitude"
+            ) {
                 getAddress()
                 getWeather()
             }
@@ -246,12 +255,14 @@ class AddPlaceActivity : AppCompatActivity() {
                 coarseLocationGranted != null && coarseLocationGranted) {
                 // Precise location access granted.
                 // permissionOk = true;
-                tvTime.text = "permission granted"
+                tvLocationPermission.text = "location permission granted"
+                btnGetLocation.visibility = View.GONE
                 getCurrentLocation()
             } else {
                 // permissionOk = false;
                 // No location access granted.
-                tvTime.text = "permission not granted"
+                tvLocationPermission.text = "location permission not granted"
+                btnGetLocation.visibility = View.VISIBLE
             }
         }
 
@@ -264,7 +275,6 @@ class AddPlaceActivity : AppCompatActivity() {
     }
 
     private fun addPlace() {
-
         //Declare and Initialise the Task
         val place = Place.create()
         //Set Task Description and isDone Status
@@ -299,7 +309,7 @@ class AddPlaceActivity : AppCompatActivity() {
 
     private fun getCurrentLocation() {
         mLocationProvider = LocationServices.getFusedLocationProviderClient(this)
-        tvTime.text = "Started updating location"
+//        tvTime.text = "Started updating location"
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -316,6 +326,9 @@ class AddPlaceActivity : AppCompatActivity() {
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             //request enable location
+//            checkAndGetLocationPermission()
+            Toast.makeText(this, "Please turn on location", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             return
         }
         mLocationProvider!!.requestLocationUpdates(
@@ -348,6 +361,7 @@ class AddPlaceActivity : AppCompatActivity() {
                 getCurrentLocation()
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
+
             }
         }
         // Check and ask Camera permission and run camera if permission granted
@@ -362,6 +376,7 @@ class AddPlaceActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getAddress() {
+        btnSubmit.isClickable = false
         mGeocoder = Geocoder(this)
         try {
             // Only 1 address is needed here.
@@ -385,14 +400,18 @@ class AddPlaceActivity : AppCompatActivity() {
                     addressLines.append(address.getAddressLine(0))
                 }
                 tvAddress.text = addressLines.toString()
+                btnSubmit.isClickable = true
             } else {
-                tvAddress.text = "WARNING! Geocoder returned more than 1 addresses!"
+                Toast.makeText(this, "WARNING! Geocoder returned more than 1 addresses!", Toast.LENGTH_LONG).show()
+                btnSubmit.isClickable = true
             }
         } catch (e: Exception) {
+            btnSubmit.isClickable = true
         }
     }
 
     private fun getWeather() {
+        btnSubmit.isClickable = false
         val key = getString(R.string.open_weather_api_key)
         val url = "https://api.openweathermap.org/data/2.5/weather?lat=${tvLatitude.text}&lon=${tvLongitude.text}&appid=${key}"
 
@@ -403,8 +422,10 @@ class AddPlaceActivity : AppCompatActivity() {
                 val weatherObject = JSONObject(response).getJSONArray("weather")[0]
                 val weather = JSONObject(weatherObject.toString()).getString("main")
                 tvWeather.text = weather.toString()
+                btnSubmit.isClickable = true
             }, { error ->
                 Log.d("Weather", "error: $error")
+                btnSubmit.isClickable = true
             })
 
         val queue = Volley.newRequestQueue(this)
@@ -418,7 +439,7 @@ class AddPlaceActivity : AppCompatActivity() {
         PostTemplate.setLatitude(this, tvLatitude.text.toString())
         PostTemplate.setLongitude(this, tvLongitude.text.toString())
         PostTemplate.setAddress(this, tvAddress.text.toString())
-        PostTemplate.setAddress(this, tvWeather.text.toString())
+        PostTemplate.setWeather(this, tvWeather.text.toString())
     }
 
     override fun onStart() {
