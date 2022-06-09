@@ -13,4 +13,8 @@ internal class FormValidatorKtTest {
     @Test
     fun checkPassword() {
     }
+
+    @Test
+    fun checkIsNotEmpty() {
+    }
 }
