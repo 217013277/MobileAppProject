@@ -1,6 +1,7 @@
 package com.example.mobileappproject
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -67,7 +68,11 @@ class DetailPlaceActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
 
-                    Picasso.get().load(imageUrl).into(detailMainImage)
+                    if (imageUrl.isNotEmpty()){
+                        Picasso.get().load(imageUrl).into(detailMainImage)
+                    } else {
+                        Picasso.get().load(R.drawable.placeholder_image_square).into(detailMainImage)
+                    }
 
                     Log.i("firebase", "Got value ${it.value}")
                 }

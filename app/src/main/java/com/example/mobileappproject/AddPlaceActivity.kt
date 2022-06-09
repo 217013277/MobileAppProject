@@ -265,7 +265,6 @@ class AddPlaceActivity : AppCompatActivity() {
 
     private fun addPlace() {
 
-
         //Declare and Initialise the Task
         val place = Place.create()
         //Set Task Description and isDone Status
@@ -282,11 +281,6 @@ class AddPlaceActivity : AppCompatActivity() {
         val newPlace = _db.child(PlaceStatics.FIREBASE_PLACE).push()
         place.objectId = newPlace.key
         //Set the values for new task in the firebase using the footer form
-        try {
-            uploadImage(place.objectId.toString())
-        } catch (e: Exception) {
-
-        }
         newPlace.setValue(place).addOnSuccessListener {
             //Reset the new task description field for reuse.
             Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
