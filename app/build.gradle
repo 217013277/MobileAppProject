@@ -43,11 +43,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     // Firebase Authenticate Service
     implementation platform('com.google.firebase:firebase-bom:30.0.2')
     implementation 'com.google.firebase:firebase-auth-ktx'
@@ -68,4 +63,16 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
     // Read image and show
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //For Test
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4-alpha07'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha07'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.0-alpha07'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter'
+    //Mockito for test
+    testImplementation 'org.mockito:mockito-core:3.8.0'
+    testImplementation 'org.mockito:mockito-inline:2.21.0'
+    testImplementation 'org.mockito:mockito-core:3.8.0'
 }

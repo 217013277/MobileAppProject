@@ -274,42 +274,8 @@ class AddPlaceActivity : AppCompatActivity() {
         )
     }
 
-    private fun addPlace() {
-        //Declare and Initialise the Task
-        val place = Place.create()
-        //Set Task Description and isDone Status
-        place.placeName = etPlaceName.text.toString()
-        place.placeDesc = etPlaceDesc.text.toString()
-        place.placeLatitude = tvLatitude.text.toString()
-        place.placeLongitude = tvLongitude.text.toString()
-        place.placeAddress = tvAddress.text.toString()
-        place.placeWeather = tvWeather.text.toString()
-        place.placeTime = tvTime.text.toString()
-        place.isFav = false
-        place.imageUrl = uploadedImageUrl
-        //Get the object id for the new task from the Firebase Database
-        val newPlace = _db.child(PlaceStatics.FIREBASE_PLACE).push()
-        place.objectId = newPlace.key
-        //Set the values for new task in the firebase using the footer form
-        newPlace.setValue(place).addOnSuccessListener {
-            //Reset the new task description field for reuse.
-            Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
-            finish()
-            uploadedImageUrl = ""
-            etPlaceName.setText("")
-            etPlaceDesc.setText("")
-            tvLatitude.text = ""
-            tvLongitude.text = ""
-            tvAddress.text = ""
-            tvWeather.text = ""
-        }.addOnFailureListener {
-            Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun getCurrentLocation() {
         mLocationProvider = LocationServices.getFusedLocationProviderClient(this)
-//        tvTime.text = "Started updating location"
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -327,8 +293,8 @@ class AddPlaceActivity : AppCompatActivity() {
             // for ActivityCompat#requestPermissions for more details.
             //request enable location
 //            checkAndGetLocationPermission()
-            Toast.makeText(this, "Please turn on location", Toast.LENGTH_LONG).show()
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+//            Toast.makeText(this, "Please turn on location", Toast.LENGTH_LONG).show()
+//            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             return
         }
         mLocationProvider!!.requestLocationUpdates(
@@ -430,6 +396,39 @@ class AddPlaceActivity : AppCompatActivity() {
 
         val queue = Volley.newRequestQueue(this)
         queue.add(weatherRequest)
+    }
+
+    private fun addPlace() {
+        //Declare and Initialise the Task
+        val place = Place.create()
+        //Set Task Description and isDone Status
+        place.placeName = etPlaceName.text.toString()
+        place.placeDesc = etPlaceDesc.text.toString()
+        place.placeLatitude = tvLatitude.text.toString()
+        place.placeLongitude = tvLongitude.text.toString()
+        place.placeAddress = tvAddress.text.toString()
+        place.placeWeather = tvWeather.text.toString()
+        place.placeTime = tvTime.text.toString()
+        place.isFav = false
+        place.imageUrl = uploadedImageUrl
+        //Get the object id for the new task from the Firebase Database
+        val newPlace = _db.child(PlaceStatics.FIREBASE_PLACE).push()
+        place.objectId = newPlace.key
+        //Set the values for new task in the firebase using the footer form
+        newPlace.setValue(place).addOnSuccessListener {
+            //Reset the new task description field for reuse.
+            Toast.makeText(this, "Task added to the list successfully" + place.objectId, Toast.LENGTH_SHORT).show()
+            finish()
+            uploadedImageUrl = ""
+            etPlaceName.setText("")
+            etPlaceDesc.setText("")
+            tvLatitude.text = ""
+            tvLongitude.text = ""
+            tvAddress.text = ""
+            tvWeather.text = ""
+        }.addOnFailureListener {
+            Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onPause() {

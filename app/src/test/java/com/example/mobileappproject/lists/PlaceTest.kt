@@ -7,11 +7,11 @@ import org.junit.Assert.*
 internal class PlaceTest {
 
     @Test
-    fun getObjectId() {
+    fun setObjectId() {
     }
 
     @Test
-    fun setObjectId() {
+    fun getObjectId() {
     }
 
     @Test
