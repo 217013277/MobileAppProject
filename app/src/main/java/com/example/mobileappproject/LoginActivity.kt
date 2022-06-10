@@ -58,21 +58,58 @@ class LoginActivity : AppCompatActivity() {
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val email = editTextEmailAddress.text.toString()
         val password = editTextPassword.text.toString()
+        var (validEmail, validPassword) = checkValidForm(
+            email,
+            editTextEmailAddress,
+            password,
+            editTextPassword
+        )
 
-        val isEmailChecked = FormValidator().checkEmail(editTextEmailAddress)
-        val isPasswordChecked = FormValidator().checkPassword(editTextPassword)
-
-        if (isEmailChecked && isPasswordChecked) {
-            Firebase.auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
-                if(task.isSuccessful && Firebase.auth.currentUser != null){
-                    ActivityChanger().goToMainActivity(this)
-                    finish()
-                }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(applicationContext,exception.localizedMessage, Toast.LENGTH_LONG).show()
+        if (validEmail && validPassword) {
+            Firebase.auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful && Firebase.auth.currentUser != null) {
+                        ActivityChanger().goToMainActivity(this)
+                        finish()
+                    }
+                }.addOnFailureListener { exception ->
+                Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
+
+    private fun checkValidForm(
+        email: String,
+        editTextEmailAddress: EditText,
+        password: String,
+        editTextPassword: EditText
+    ): Pair<Boolean, Boolean> {
+        var validEmail = false
+        var validPassword = false
+
+        if (!FormValidator().checkIsNotEmpty(email)) {
+            editTextEmailAddress.error = "This field is required"
+        } else {
+            if (!FormValidator().checkIsEmail(email)) {
+                editTextEmailAddress.error = "The email is in bad format"
+            } else {
+                validEmail = true
+            }
+        }
+
+        if (!FormValidator().checkIsNotEmpty(password)) {
+            editTextPassword.error = "This field is required"
+        } else {
+            if (!FormValidator().checkIsPassword(password)) {
+                editTextPassword.error = "Min length 6 and max length 12"
+            } else {
+                validPassword = true
+            }
+        }
+        return Pair(validEmail, validPassword)
+    }
+
 
     // Google login
     private fun signInGoogle(){

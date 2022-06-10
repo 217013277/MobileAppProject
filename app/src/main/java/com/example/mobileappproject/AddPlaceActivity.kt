@@ -14,7 +14,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.MediaStore
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -117,9 +116,9 @@ class AddPlaceActivity : AppCompatActivity() {
         }
 
         btnSubmit.setOnClickListener {
-            val isEtPlaceNameCheck = FormValidator().checkIsNotEmpty(etPlaceName)
-            val isEtPlaceDescCheck = FormValidator().checkIsNotEmpty(etPlaceDesc)
-            if (isEtPlaceNameCheck && isEtPlaceDescCheck){
+            val (validName, validDesc) = checkValidForm()
+
+            if (validName && validDesc){
                 addPlace()
             }
         }
@@ -139,6 +138,24 @@ class AddPlaceActivity : AppCompatActivity() {
             .setFastestInterval(5)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         getCurrentLocation()
+    }
+
+    private fun checkValidForm(): Pair<Boolean, Boolean> {
+        var validName = false
+        var validDesc = false
+
+        if (!FormValidator().checkIsNotEmpty(etPlaceName.text.toString())) {
+            etPlaceName.error = "this field is required"
+        } else {
+            validName = true
+        }
+
+        if (!FormValidator().checkIsNotEmpty(etPlaceDesc.text.toString())) {
+            etPlaceDesc.error = "this field is required"
+        } else {
+            validDesc = true
+        }
+        return Pair(validName, validDesc)
     }
 
     companion object{

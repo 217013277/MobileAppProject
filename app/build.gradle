@@ -68,7 +68,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4-alpha07'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha07'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.0-alpha07'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.1-alpha07'
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
 //    testImplementation 'org.junit.jupiter:junit-jupiter'
     //Mockito for test
