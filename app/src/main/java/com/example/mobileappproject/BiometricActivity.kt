@@ -9,7 +9,6 @@ import com.example.mobileappproject.extensions.ActivityChanger
 import com.example.mobileappproject.extensions.BiometricAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Text
 
 class BiometricActivity : AppCompatActivity() {
 

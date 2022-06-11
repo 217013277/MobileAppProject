@@ -8,7 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mobileappproject.extensions.*
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -36,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val email=editTextEmailAddress.text.toString()
         val password=editTextPassword.text.toString()
-        var (validEmail, validPassword) = checkValidForm(
+        val (validEmail, validPassword) = checkValidForm(
             email,
             editTextEmailAddress,
             password,
@@ -87,9 +86,9 @@ class RegisterActivity : AppCompatActivity() {
         return Pair(validEmail, validPassword)
     }
 
-    private fun canUpgradeAnonymous(firebaseAuth: FirebaseAuth): Boolean {
-        return firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isAnonymous == true
-    }
+//    private fun canUpgradeAnonymous(firebaseAuth: FirebaseAuth): Boolean {
+//        return firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isAnonymous == true
+//    }
 
     // add this check, then you would have to login everytime you start your application on your phone.
     override fun onStart() {

@@ -1,9 +1,5 @@
 package com.example.mobileappproject.extensions
 
-import android.util.Patterns
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.util.PatternsCompat
 
 class FormValidator {

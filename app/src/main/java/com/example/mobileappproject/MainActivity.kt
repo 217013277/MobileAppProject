@@ -23,9 +23,9 @@ import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity(), PlaceRowListener {
 
-    lateinit var _db: DatabaseReference
-    var _placeList: MutableList<Place>? = null
-    lateinit var _adapter: PlaceAdapter
+    private lateinit var _db: DatabaseReference
+    private var _placeList: MutableList<Place>? = null
+    private lateinit var _adapter: PlaceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
