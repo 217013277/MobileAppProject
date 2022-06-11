@@ -7,82 +7,142 @@ import org.junit.Assert.*
 internal class PlaceTest {
 
     @Test
-    fun setObjectId() {
+    fun setAndGetObjectId() {
+        val testPlace = Place.create()
+        testPlace.objectId = "123"
+        assertEquals("123",testPlace.objectId)
     }
 
-    @Test
-    fun getObjectId() {
-    }
+//    @Test
+//    fun getObjectId() {
+//        val testPlace = Place.create()
+//        testPlace.objectId = "123"
+//        assertEquals("123",testPlace.objectId)
+//    }
+
+//    @Test
+//    fun getPlaceName() {
+//        val testPlace = Place.create()
+//        testPlace.placeName = "address name"
+//        assertEquals("address name",testPlace.placeName)
+//    }
 
     @Test
-    fun getPlaceName() {
+    fun setAndGetPlaceName() {
+        val testPlace = Place.create()
+        testPlace.placeName = "address name"
+        assertEquals("address name",testPlace.placeName)
     }
 
-    @Test
-    fun setPlaceName() {
-    }
+//    @Test
+//    fun getPlaceDesc() {
+//        val testPlace = Place.create()
+//        testPlace.placeDesc = "address description"
+//        assertEquals("address description",testPlace.placeDesc)
+//    }
 
     @Test
-    fun getPlaceDesc() {
+    fun setAndGetPlaceDesc() {
+        val testPlace = Place.create()
+        testPlace.placeDesc = "address description"
+        assertEquals("address description",testPlace.placeDesc)
     }
 
-    @Test
-    fun setPlaceDesc() {
-    }
+//    @Test
+//    fun getPlaceLatitude() {
+//        val testPlace = Place.create()
+//        testPlace.placeLatitude = "-1.00"
+//        assertEquals("-1.00",testPlace.placeLatitude)
+//    }
 
     @Test
-    fun getPlaceLatitude() {
+    fun setAndGetPlaceLatitude() {
+        val testPlace = Place.create()
+        testPlace.placeLatitude = "-1.00"
+        assertEquals("-1.00",testPlace.placeLatitude)
     }
 
-    @Test
-    fun setPlaceLatitude() {
-    }
+//    @Test
+//    fun getPlaceLongitude() {
+//        val testPlace = Place.create()
+//        testPlace.placeLongitude = "1.00"
+//        assertEquals("1.00",testPlace.placeLongitude)
+//    }
 
     @Test
-    fun getPlaceLongitude() {
+    fun setAndGetPlaceLongitude() {
+        val testPlace = Place.create()
+        testPlace.placeLongitude = "1.00"
+        assertEquals("1.00",testPlace.placeLongitude)
     }
 
-    @Test
-    fun setPlaceLongitude() {
-    }
+//    @Test
+//    fun getPlaceAddress() {
+//        val testPlace = Place.create()
+//        testPlace.placeAddress = "abc123"
+//        assertEquals("abc123",testPlace.placeAddress)
+//    }
 
     @Test
-    fun getPlaceAddress() {
+    fun setAndGetPlaceAddress() {
+        val testPlace = Place.create()
+        testPlace.placeAddress = "abc123"
+        assertEquals("abc123",testPlace.placeAddress)
     }
 
-    @Test
-    fun setPlaceAddress() {
-    }
+//    @Test
+//    fun getPlaceWeather() {
+//        val testPlace = Place.create()
+//        testPlace.placeWeather = "cloud"
+//        assertEquals("cloud",testPlace.placeWeather)
+//    }
 
     @Test
-    fun getPlaceWeather() {
+    fun setAndGetPlaceWeather() {
+        val testPlace = Place.create()
+        testPlace.placeWeather = "cloud"
+        assertEquals("cloud",testPlace.placeWeather)
     }
 
-    @Test
-    fun setPlaceWeather() {
-    }
+//    @Test
+//    fun getPlaceTime() {
+//        val testPlace = Place.create()
+//        testPlace.placeTime = "12:00"
+//        assertEquals("12:00",testPlace.placeTime)
+//    }
 
     @Test
-    fun getPlaceTime() {
+    fun setAndGetPlaceTime() {
+        val testPlace = Place.create()
+        testPlace.placeTime = "12:00"
+        assertEquals("12:00",testPlace.placeTime)
     }
 
-    @Test
-    fun setPlaceTime() {
-    }
+//    @Test
+//    fun isFav() {
+//        val testPlace = Place.create()
+//        testPlace.isFav = true
+//        assertEquals(true,testPlace.isFav)
+//    }
 
     @Test
-    fun isFav() {
+    fun setAndGetIsFav() {
+        val testPlace = Place.create()
+        testPlace.isFav = true
+        assertEquals(true,testPlace.isFav)
     }
 
-    @Test
-    fun setFav() {
-    }
+//    @Test
+//    fun getImageUrl() {
+//        val testPlace = Place.create()
+//        testPlace.imageUrl = "www.abc.com"
+//        assertEquals("www.abc.com",testPlace.imageUrl)
+//    }
 
     @Test
-    fun getImageUrl() {
-    }
-
-    @Test
-    fun setImageUrl() {
+    fun setAndGetImageUrl() {
+        val testPlace = Place.create()
+        testPlace.imageUrl = "www.abc.com"
+        assertEquals("www.abc.com",testPlace.imageUrl)
     }
 }
